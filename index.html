@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>王静 Jennie · 财务BP作品集</title>
+<meta name="description" content="王静 Jennie · 财务BP独立分析作品集。Driver Tree、UE模型、滚动预测、敏感性分析。" />
+<style>
+  :root {
+    --ink: #0F172A;
+    --ink-soft: #1E293B;
+    --muted: #64748B;
+    --line: #E2E8F0;
+    --bg: #FFFFFF;
+    --bg-soft: #F8FAFC;
+    --accent: #1E3A8A;
+    --accent-soft: #DBEAFE;
+    --accent-hover: #1E40AF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); }
+
+  /* Top nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 1080px; margin: 0 auto; padding: 18px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { font-weight: 700; font-size: 18px; letter-spacing: 0.3px; }
+  .brand .accent { color: var(--accent); }
+  .nav-links a {
+    color: var(--ink-soft); margin-left: 28px; font-size: 15px;
+  }
+
+  /* Hero */
+  .hero {
+    max-width: 1080px; margin: 0 auto; padding: 96px 32px 72px;
+  }
+  .hero h1 {
+    font-size: 56px; font-weight: 800; letter-spacing: -0.5px;
+    line-height: 1.1; color: var(--ink);
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero .lead {
+    margin-top: 28px; font-size: 19px; color: var(--ink-soft);
+    max-width: 760px;
+  }
+  .hero .meta {
+    margin-top: 36px; font-size: 14px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 24px;
+  }
+  .hero .meta span::before {
+    content: ""; display: inline-block; width: 6px; height: 6px;
+    background: var(--accent); border-radius: 50%;
+    margin-right: 10px; vertical-align: middle;
+  }
+
+  /* Section heading */
+  .section { max-width: 1080px; margin: 0 auto; padding: 64px 32px; }
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 36px; padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head h2 {
+    font-size: 28px; font-weight: 700; color: var(--ink);
+  }
+  .section-head .count {
+    font-size: 13px; color: var(--muted); letter-spacing: 0.5px;
+  }
+
+  /* Case grid */
+  .cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .case {
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 28px; background: var(--bg);
+    transition: all 0.2s ease;
+    display: flex; flex-direction: column;
+  }
+  .case:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+    border-color: var(--accent);
+  }
+  .case.placeholder {
+    background: var(--bg-soft); border-style: dashed;
+    color: var(--muted);
+  }
+  .case .tag {
+    display: inline-block; font-size: 11px; letter-spacing: 1px;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 4px 10px; border-radius: 999px; font-weight: 600;
+    align-self: flex-start;
+  }
+  .case h3 {
+    margin-top: 14px; font-size: 22px; font-weight: 700;
+    color: var(--ink);
+  }
+  .case .case-meta {
+    margin-top: 6px; font-size: 13px; color: var(--muted);
+  }
+  .case .case-summary {
+    margin-top: 16px; font-size: 15px; color: var(--ink-soft);
+    flex-grow: 1;
+  }
+  .case .case-tags {
+    margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .case .case-tags span {
+    font-size: 12px; color: var(--muted);
+    border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px;
+  }
+  .case .case-cta {
+    margin-top: 22px; display: flex; gap: 12px; align-items: center;
+  }
+  .btn {
+    display: inline-block; padding: 10px 18px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-primary {
+    background: var(--accent); color: #FFF !important;
+  }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-ghost {
+    border: 1px solid var(--line); color: var(--ink-soft);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* About */
+  .about {
+    background: var(--bg-soft); border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .about-grid {
+    display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 56px;
+  }
+  .about p {
+    color: var(--ink-soft); font-size: 16px; margin-bottom: 16px;
+  }
+  .about ul { list-style: none; padding: 0; }
+  .about li {
+    padding: 10px 0; border-bottom: 1px dashed var(--line);
+    display: flex; justify-content: space-between; font-size: 14px;
+  }
+  .about li:last-child { border-bottom: 0; }
+  .about li .label { color: var(--muted); }
+  .about li .value { color: var(--ink); font-weight: 500; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line); background: var(--bg-soft);
+  }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto; padding: 32px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    font-size: 13px; color: var(--muted);
+  }
+
+  /* Mobile */
+  @media (max-width: 720px) {
+    .hero { padding: 56px 22px 40px; }
+    .hero h1 { font-size: 36px; }
+    .section { padding: 40px 22px; }
+    .cases { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .nav-links a { margin-left: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">王静 <span class="accent">Jennie</span> · 财务BP作品集</div>
+    <div class="nav-links">
+      <a href="#cases">作品</a>
+      <a href="#about">关于</a>
+      <a href="#contact">联系</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>用财务数据<br/>驱动<span class="accent">经营决策</span>。</h1>
+  <p class="lead">
+    这里是我作为审计转型财务BP过程中独立完成的分析作品集。
+    所有数据基于公开财报与行业研究，方法论参照成熟期 BP 的
+    Driver Tree / UE 三视角 / Bridge 归因 / 滚动预测 / 敏感性分析。
+  </p>
+  <div class="meta">
+    <span>CICPA</span>
+    <span>会计硕士 · 上海对外经贸大学</span>
+    <span>4年Big4审计 · 金融科技 / 商业银行 / 融资租赁 / 美元基金被投</span>
+  </div>
+</header>
+
+<section class="section" id="cases">
+  <div class="section-head">
+    <h2>独立分析 Case</h2>
+    <div class="count">1 已发布 · 1 进行中</div>
+  </div>
+
+  <div class="cases">
+
+    <article class="case">
+      <span class="tag">已发布 · CASE 01</span>
+      <h3>淘天集团 FY25 BP 分析</h3>
+      <div class="case-meta">阿里巴巴中国电商业务 · 对标PDD主站 / JD零售 · 2026.05</div>
+      <p class="case-summary">
+        以财务BP视角拆解淘天FY25核心命题：CMR增速失速、
+        Take Rate触顶、AAC流失。搭建三层Driver Tree完成
+        +75亿CMR增长归因 Bridge，输出五情景敏感性预测、
+        12项核心监控KPI及量化BP行动建议。
+      </p>
+      <div class="case-tags">
+        <span>Driver Tree</span>
+        <span>UE 三视角</span>
+        <span>P&L Bridge</span>
+        <span>5情景敏感性</span>
+        <span>同业对标</span>
+      </div>
+      <div class="case-cta">
+        <a class="btn btn-primary" href="taotian.html">在线阅读 →</a>
+        <a class="btn btn-ghost" href="downloads/淘天BP分析报告_v2.docx" download>Word</a>
+        <a class="btn btn-ghost" href="downloads/淘天BP分析过程_工作簿_v2.xlsx" download>Excel</a>
+      </div>
+    </article>
+
+    <article class="case placeholder">
+      <span class="tag" style="background:#FEF3C7;color:#92400E">进行中 · CASE 02</span>
+      <h3>滚动预测 Case（13周现金流）</h3>
+      <div class="case-meta">主题：13周滚动现金流预测 + 偏差归因 · 2026.06 上线</div>
+      <p class="case-summary">
+        基于一家虚构成长期SaaS企业，搭建13周滚动现金流模型、
+        季度滚动预算 vs 实际偏差归因框架、月度经营分析模板。
+        完成后将公开。
+      </p>
+      <div class="case-tags">
+        <span>13周CF</span>
+        <span>滚动预算</span>
+        <span>偏差归因</span>
+      </div>
+      <div class="case-cta">
+        <span style="color:var(--muted);font-size:14px">敬请期待</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="section">
+    <div class="section-head">
+      <h2>关于我</h2>
+      <div class="count">为什么是我</div>
+    </div>
+
+    <div class="about-grid">
+      <div>
+        <p>
+          四年安永审计经验，覆盖陆金所（美股/港股）、蚂蚁、建行浙江分行、
+          国耀融汇、上海尚诚、Hello（哈啰）IPO 等项目。在审计实操中
+          深度参与并表判断、利息成本测算、关联方定价、5年盈利预测复核——
+          这些工作的底层方法论与财务BP的预算/滚动预测/Driver Tree 是同构的。
+        </p>
+        <p>
+          我相信"会算账"和"懂业务"之间的距离，不在于知识储备，
+          而在于看待数据的视角。从审计转向 BP，
+          意味着从"过去发生了什么 + 是否合规"
+          切换到"未来要做什么 + 投入产出值不值"。
+          这个作品集就是我练习这种切换的过程。
+        </p>
+      </div>
+
+      <ul>
+        <li><span class="label">证书</span><span class="value">CICPA</span></li>
+        <li><span class="label">硕士</span><span class="value">上海对外经贸大学 · 会计</span></li>
+        <li><span class="label">学士</span><span class="value">上海工程技术大学 · 财务管理</span></li>
+        <li><span class="label">现职</span><span class="value">EY 上海 · Senior 2</span></li>
+        <li><span class="label">熟悉准则</span><span class="value">CAS / IFRS</span></li>
+        <li><span class="label">技术栈</span><span class="value">Excel / SQL / Tableau / Python</span></li>
+        <li><span class="label">语言</span><span class="value">中文母语 / 英语 CET-6</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="section-head">
+    <h2>联系</h2>
+    <div class="count">欢迎递Offer / 内推 / 经验交流</div>
+  </div>
+  <ul style="list-style:none;padding:0;font-size:16px;color:var(--ink-soft);">
+    <li style="margin-bottom:12px">📧 <a href="mailto:865461746@qq.com">865461746@qq.com</a></li>
+    <li style="margin-bottom:12px">📱 13472543206</li>
+    <li>🔗 <a href="https://github.com/Jennie_Wang" target="_blank" rel="noopener">github.com/Jennie_Wang</a></li>
+  </ul>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 王静 Jennie · 财务BP作品集</div>
+    <div>本站所有数据基于公开信息整理，分析观点仅代表个人</div>
+  </div>
+</footer>
+
+</body>
+</html>

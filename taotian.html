@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>淘天集团 FY25 BP分析 · 王静 Jennie</title>
+<meta name="description" content="淘天集团FY25财务BP视角深度分析：Driver Tree / UE三视角 / P&L Bridge / 五情景敏感性 / PDD与JD对标。" />
+<style>
+  :root {
+    --ink: #0F172A;
+    --ink-soft: #1E293B;
+    --muted: #64748B;
+    --muted-2: #94A3B8;
+    --line: #E2E8F0;
+    --line-soft: #F1F5F9;
+    --bg: #FFFFFF;
+    --bg-soft: #F8FAFC;
+    --accent: #1E3A8A;
+    --accent-soft: #DBEAFE;
+    --accent-hover: #1E40AF;
+    --pos: #047857;
+    --neg: #B91C1C;
+    --warn: #B45309;
+    --warn-soft: #FEF3C7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); }
+
+  /* Top nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 980px; margin: 0 auto; padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { font-weight: 700; font-size: 16px; }
+  .brand .accent { color: var(--accent); }
+  .nav-back { font-size: 14px; color: var(--muted); }
+  .nav-back:hover { color: var(--accent); }
+
+  /* Hero */
+  .hero {
+    max-width: 980px; margin: 0 auto; padding: 64px 32px 32px;
+  }
+  .hero .tag {
+    display: inline-block; font-size: 11px; letter-spacing: 1px;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 5px 12px; border-radius: 999px; font-weight: 600;
+  }
+  .hero h1 {
+    margin-top: 18px; font-size: 44px; font-weight: 800;
+    letter-spacing: -0.4px; line-height: 1.15;
+  }
+  .hero .subtitle {
+    margin-top: 14px; font-size: 18px; color: var(--ink-soft);
+  }
+  .hero .meta {
+    margin-top: 32px; padding: 18px 22px;
+    background: var(--bg-soft); border-left: 3px solid var(--accent);
+    border-radius: 4px; font-size: 14px; color: var(--ink-soft);
+  }
+  .hero .meta strong { color: var(--ink); }
+
+  /* TOC */
+  .toc {
+    max-width: 980px; margin: 0 auto; padding: 24px 32px;
+  }
+  .toc-inner {
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 22px 28px; background: var(--bg);
+  }
+  .toc-title {
+    font-size: 12px; letter-spacing: 1.5px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .toc-list {
+    columns: 2; column-gap: 32px; list-style: none;
+  }
+  .toc-list li {
+    padding: 4px 0; font-size: 15px;
+    break-inside: avoid;
+  }
+  .toc-list a { color: var(--ink-soft); }
+  .toc-list a:hover { color: var(--accent); }
+  .toc-list .num {
+    display: inline-block; width: 32px; color: var(--muted-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Section */
+  .section { max-width: 980px; margin: 0 auto; padding: 56px 32px 16px; }
+  .section h2 {
+    font-size: 30px; font-weight: 700; letter-spacing: -0.3px;
+    padding-bottom: 14px; border-bottom: 2px solid var(--ink);
+    margin-bottom: 32px;
+  }
+  .section h3 {
+    font-size: 21px; font-weight: 700; margin-top: 36px; margin-bottom: 16px;
+  }
+  .section h3 .num {
+    color: var(--accent); margin-right: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .section h4 {
+    font-size: 16px; font-weight: 700; margin-top: 24px; margin-bottom: 10px;
+    color: var(--ink-soft);
+  }
+  .section p {
+    color: var(--ink-soft); margin-bottom: 14px;
+  }
+  .section ul, .section ol {
+    color: var(--ink-soft); margin: 12px 0 16px 22px;
+  }
+  .section li { padding: 4px 0; }
+
+  /* Tables */
+  table {
+    width: 100%; border-collapse: collapse; font-size: 14px;
+    margin: 16px 0 24px;
+  }
+  thead th {
+    background: var(--bg-soft); text-align: left;
+    padding: 12px 14px; border-bottom: 2px solid var(--ink);
+    font-weight: 600; color: var(--ink); font-size: 13px;
+  }
+  tbody td {
+    padding: 11px 14px; border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  tbody tr:hover td { background: var(--bg-soft); }
+  td.num, th.num { font-variant-numeric: tabular-nums; text-align: right; }
+  .pos { color: var(--pos); font-weight: 600; }
+  .neg { color: var(--neg); font-weight: 600; }
+  td.muted { color: var(--muted); font-size: 12px; }
+  tr.subtotal td {
+    border-top: 1px solid var(--ink);
+    background: var(--bg-soft); font-weight: 600;
+  }
+
+  /* KPI cards */
+  .kpis {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin: 24px 0;
+  }
+  .kpi {
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 20px 22px; background: var(--bg);
+  }
+  .kpi .label {
+    font-size: 12px; color: var(--muted); letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .kpi .value {
+    font-size: 28px; font-weight: 700; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi .delta {
+    margin-top: 6px; font-size: 13px;
+  }
+
+  /* Callouts */
+  .callout {
+    background: var(--bg-soft); border-left: 3px solid var(--accent);
+    padding: 18px 22px; border-radius: 4px; margin: 20px 0;
+    font-size: 15px; color: var(--ink-soft);
+  }
+  .callout strong { color: var(--ink); }
+  .callout.warn {
+    background: var(--warn-soft); border-left-color: var(--warn);
+  }
+  .callout.warn strong { color: var(--warn); }
+
+  /* Bridge bar */
+  .bridge {
+    margin: 20px 0; font-size: 13px;
+  }
+  .bridge-row {
+    display: grid; grid-template-columns: 220px 1fr 80px;
+    align-items: center; padding: 6px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .bridge-label { color: var(--ink-soft); }
+  .bridge-bar { height: 22px; position: relative; }
+  .bridge-bar .fill {
+    position: absolute; height: 100%; border-radius: 3px;
+  }
+  .bridge-bar .fill.pos { background: #10B981; }
+  .bridge-bar .fill.neg { background: #EF4444; }
+  .bridge-bar .fill.start, .bridge-bar .fill.end { background: var(--ink); }
+  .bridge-value {
+    text-align: right; font-variant-numeric: tabular-nums;
+    color: var(--ink); font-weight: 500;
+  }
+
+  /* Tag in title */
+  .official { color: var(--pos); font-size: 11px; }
+  .estimated {
+    color: var(--warn); font-size: 11px;
+    background: var(--warn-soft); padding: 2px 6px; border-radius: 4px;
+    margin-left: 6px;
+  }
+
+  /* Driver tree */
+  .tree {
+    font-family: -apple-system, "PingFang SC", monospace;
+    background: var(--bg-soft); border: 1px solid var(--line);
+    padding: 22px 26px; border-radius: 8px;
+    margin: 20px 0; font-size: 14px;
+    line-height: 2.1; color: var(--ink-soft);
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line); background: var(--bg-soft);
+    margin-top: 64px;
+  }
+  .footer-inner {
+    max-width: 980px; margin: 0 auto; padding: 32px;
+    font-size: 13px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 18px;
+    justify-content: space-between;
+  }
+
+  /* Mobile */
+  @media (max-width: 720px) {
+    .hero { padding: 40px 22px 22px; }
+    .hero h1 { font-size: 28px; }
+    .section { padding: 40px 22px 16px; }
+    .toc { padding: 16px 22px; }
+    .toc-list { columns: 1; }
+    .kpis { grid-template-columns: 1fr; }
+    .bridge-row { grid-template-columns: 130px 1fr 64px; font-size: 12px; }
+    table { font-size: 12px; }
+    thead th, tbody td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">王静 <span class="accent">Jennie</span> · 财务BP作品集</div>
+    <a class="nav-back" href="index.html">← 返回作品集</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <span class="tag">CASE 01 · 已发布</span>
+  <h1>淘天集团 FY25 BP分析</h1>
+  <p class="subtitle">阿里巴巴中国电商业务 · 对标 PDD主站 / JD零售 · 财务BP视角深度分析</p>
+
+  <div class="meta">
+    <strong>口径声明 · </strong>本报告以阿里 FY25（2024.4–2025.3）为时间口径，与 PDD/JD 对标时使用 CY2024 ≈ 阿里 FY25 近似换算。
+    GMV/收入/利润单位均为人民币亿元；FY = 阿里财年。<br/>
+    <strong>数据可信度 · </strong><span class="official">●</span> 官方披露口径 ·
+    <span class="estimated">⚠ 估算</span> 行业研究估算，每项标注区间 ·
+    与 Excel 工作簿"8_口径与假设"完全一致。<br/>
+    <strong>编制 · </strong>王静 Jennie · 2026.05 · 个人独立分析作品（非任何机构观点）
+  </div>
+</header>
+
+<div class="toc">
+  <div class="toc-inner">
+    <div class="toc-title">目录</div>
+    <ul class="toc-list">
+      <li><a href="#exec"><span class="num">0</span>核心结论（一页纸）</a></li>
+      <li><a href="#market"><span class="num">1</span>行业与市场地位</a></li>
+      <li><a href="#revenue"><span class="num">2</span>业务全景与收入结构</a></li>
+      <li><a href="#bridge"><span class="num">3</span>FY25 增长 P&L Bridge</a></li>
+      <li><a href="#ue"><span class="num">4</span>单位经济模型 UE</a></li>
+      <li><a href="#driver"><span class="num">5</span>Driver Tree 三层穿透</a></li>
+      <li><a href="#bench"><span class="num">6</span>同业对标</a></li>
+      <li><a href="#sens"><span class="num">7</span>FY26 五情景敏感性</a></li>
+      <li><a href="#diag"><span class="num">8</span>5大问题诊断 + 量化建议</a></li>
+      <li><a href="#kpi"><span class="num">9</span>12项核心监控KPI</a></li>
+      <li><a href="#appendix"><span class="num">10</span>附录：口径与数据源</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ 0. EXEC SUMMARY ============ -->
+<section class="section" id="exec">
+  <h2>0. 核心结论（一页纸）</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="label">FY25 CMR</div>
+      <div class="value">3,132 <span style="font-size:14px;color:var(--muted);font-weight:400">亿</span></div>
+      <div class="delta pos">YoY +2.5% · 仍是行业最大变现池</div>
+    </div>
+    <div class="kpi">
+      <div class="label">FY25 分部利润率</div>
+      <div class="value">47.5%</div>
+      <div class="delta pos">YoY +1.1pct · 集团利润中枢</div>
+    </div>
+    <div class="kpi">
+      <div class="label">FY25 GMV</div>
+      <div class="value">7.6 <span style="font-size:14px;color:var(--muted);font-weight:400">万亿</span></div>
+      <div class="delta neg">YoY -2.6% · 连续两年下滑</div>
+    </div>
+  </div>
+
+  <h3><span class="num">0.1</span>三大核心发现</h3>
+  <ul>
+    <li><strong>规模仍领先但份额持续被切：</strong>淘天 GMV 仍是中国电商单一最大平台，FY25 约 7.6 万亿，但市占率从 2022 年约 55% 降至 45%，PDD 主站三年从 19% 升至 32%，份额差从 35pct 缩到 14pct。</li>
+    <li><strong>盈利质量结构性向好但增长失速：</strong>CMR Take Rate 从 3.66% 升至 4.12%（+0.46pct，全站推+万相台升级驱动），分部利润率提升至 47.5%；但 CMR 同比 +2.5%、GMV -2.6%，价跑赢但量在下降，"价补量"不可持续。</li>
+    <li><strong>直营业务从微利转亏，需手术：</strong>直营经营利润率 FY23 +2.5% → FY25 -2.2%，FY25 净亏损 27 亿元，拖累整体经营利润率 0.6pct。</li>
+  </ul>
+
+  <h3><span class="num">0.2</span>三大核心隐忧</h3>
+  <ul>
+    <li><strong>用户基本盘流失：</strong>AAC 从 10.3 亿降至 9.5 亿（-0.8 亿），PDD 主站达 9.8 亿首次反超。每流失 1 亿活跃买家，按 ARPU-CMR 330 元测算，等于 -33 亿 CMR/年的稳态影响。</li>
+    <li><strong>Take Rate 已超越 PDD 0.38pct：</strong>4.12% vs PDD 3.74%，进一步上提将加速中长尾商家流失，触发"广告通胀-商家退出"螺旋。</li>
+    <li><strong>直播/海外两条二曲线仍在投入期：</strong>淘宝直播 GMV 占比 < 8%、速卖通 AE Choice 仍在亏损扩张期，3 年内难以独立扛起增长大旗。</li>
+  </ul>
+
+  <h3><span class="num">0.3</span>BP 行动建议（量化版）</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:18%">行动</th>
+        <th style="width:22%">投入</th>
+        <th style="width:22%">回报</th>
+        <th style="width:14%">回收期</th>
+        <th style="width:24%">关键风险</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>88VIP 扩 5000万 → 1亿</strong></td>
+        <td>会员费补贴 +15亿/年<br/>获客成本 +8亿/年</td>
+        <td>GMV +480亿<br/>CMR +19.7亿（按4.1%）</td>
+        <td>~1.5年</td>
+        <td>PDD 百亿补贴每加码 10 亿，VIP 流失约 3pct</td>
+      </tr>
+      <tr>
+        <td><strong>砍亏损直营 SKU</strong></td>
+        <td>一次性减值 / 库存清理 ~30亿</td>
+        <td>年减亏 22亿<br/>经营利润率 +1.1pct</td>
+        <td>~1.4年</td>
+        <td>失去高频日百流量入口，影响 AAC 留存</td>
+      </tr>
+      <tr>
+        <td><strong>Take Rate 维持 4.1%（不上提）</strong></td>
+        <td>放弃理论上 +76亿 CMR 上行</td>
+        <td>避免 5%–8% 中长尾商家流失，对应 -150~-240亿 GMV 风险</td>
+        <td>—</td>
+        <td>商家承受度阈值实际可能更低</td>
+      </tr>
+      <tr>
+        <td><strong>淘宝直播 GMV 占比 → 12%</strong></td>
+        <td>内容补贴 +25亿/年<br/>主播激励 +10亿/年</td>
+        <td>GMV +1,800亿（按 8%→12%）<br/>CMR +52亿（按2.9% Take Rate）</td>
+        <td>~2.0年</td>
+        <td>抖音电商挤压，主播迁移成本高</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>BP 一句话结论 · </strong>淘天处于"成熟期现金奶牛"位置，FY26 BP 核心使命不是"驱动增长"，而是"守住利润 + 优化结构"。
+    具体路径：① 防守 Take Rate 在 4.10%–4.15% 区间不再上提；
+    ② 砍直营长尾、保留高频日百；
+    ③ 扩 88VIP 守住高净值用户；
+    ④ 用闲置现金流加大回购对冲估值压制（CFO 维度）。
+  </div>
+</section>
+
+<!-- ============ 1. MARKET ============ -->
+<section class="section" id="market">
+  <h2>1. 行业与市场地位</h2>
+
+  <h3><span class="num">1.1</span>中国电商行业大盘</h3>
+  <p>从社零口径看，中国实物商品网上零售额自 2022 年 11.96 万亿增长至 2024 年 13.79 万亿，CAGR 约 7.4%；增速从 2022 年 +14% 已下降至 2024 年 +5.9%。
+  网上零售渗透率（网零 / 社零）从 27.2% 提升至 28.3%，进一步空间有限——行业进入存量博弈阶段。</p>
+
+  <h3><span class="num">1.2</span>三家份额测算（GMV 口径）</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>平台</th>
+        <th class="num">2022 GMV</th>
+        <th class="num">2024 GMV</th>
+        <th class="num">YoY 24</th>
+        <th class="num">2024 份额</th>
+        <th>战略画像</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>淘天集团</strong> <span class="official">●</span></td>
+        <td class="num">8.0万亿</td>
+        <td class="num">7.6万亿</td>
+        <td class="num neg">-2.6%</td>
+        <td class="num">45.2%</td>
+        <td>存量主导者 / 利润奶牛</td>
+      </tr>
+      <tr>
+        <td>PDD 主站 <span class="estimated">⚠ 区间 5.0–5.6万亿</span></td>
+        <td class="num">2.8万亿</td>
+        <td class="num">5.3万亿</td>
+        <td class="num pos">+29%</td>
+        <td class="num">31.5%</td>
+        <td>增长挑战者 / 低价心智</td>
+      </tr>
+      <tr>
+        <td>京东零售 <span class="estimated">⚠ 区间 ±5%</span></td>
+        <td class="num">2.85万亿</td>
+        <td class="num">3.05万亿</td>
+        <td class="num pos">+5.2%</td>
+        <td class="num">18.2%</td>
+        <td>差异化品质流 / 3C家电基本盘</td>
+      </tr>
+      <tr>
+        <td>抖音电商 <span class="estimated">⚠ 区间 3.0–3.7万亿</span></td>
+        <td class="num">1.4万亿</td>
+        <td class="num">3.5万亿</td>
+        <td class="num pos">+59%</td>
+        <td class="num">20.8%</td>
+        <td>内容流量新势力</td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">注：CR4 合计 &gt; 100% 因部分 GMV 在不同口径下被重复计入（如品牌商在淘宝/抖音多渠道）。
+  PDD 主站口径已剔除 Temu 海外业务，按主站约占总 GMV 75% 估算。</p>
+
+  <div class="callout">
+    <strong>BP 行业判断 · </strong>电商"双寡头时代"已结束，进入"四足鼎立 + 长尾"。
+    淘天份额从 2022 年 55% 降至 2024 年 45%，三年损失 10pct。
+    BP 的判断不是"淘天会不会输"，而是"淘天能否守住 40% 份额底线 + 47% 利润率底线"。
+  </div>
+</section>
+
+<!-- ============ 2. REVENUE ============ -->
+<section class="section" id="revenue">
+  <h2>2. 业务全景与收入结构</h2>
+
+  <h3><span class="num">2.1</span>淘天集团业务版图</h3>
+  <p>淘天集团是阿里巴巴中国电商业务的总称，在阿里"1+6+N"组织架构下作为独立分部披露。包含：</p>
+  <ul>
+    <li><strong>淘宝</strong>（C2C+轻品牌+源头工厂）：流量入口，货币化率较低</li>
+    <li><strong>天猫</strong>（B2C品牌旗舰）：CMR 核心来源，客单价高</li>
+    <li><strong>1688</strong>（B2B批发）：体量小但毛利稳定</li>
+    <li><strong>闲鱼</strong>（C2C二手）：用户粘性资产，未独立变现</li>
+    <li><strong>淘特</strong>（已合并）：低价心智失败实验</li>
+  </ul>
+
+  <h3><span class="num">2.2</span>FY23–FY25 收入结构（亿元）</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>科目</th>
+        <th class="num">FY23</th>
+        <th class="num">FY24</th>
+        <th class="num">FY25</th>
+        <th class="num">CAGR</th>
+        <th class="num">YoY 25</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>客户管理收入 CMR</strong> <span class="official">●</span></td>
+        <td class="num">2,925</td><td class="num">3,057</td><td class="num">3,132</td>
+        <td class="num pos">+3.5%</td><td class="num pos">+2.5%</td>
+      </tr>
+      <tr>
+        <td>　└ 广告收入 <span class="estimated">⚠ 80%估算</span></td>
+        <td class="num">2,345</td><td class="num">2,457</td><td class="num">2,532</td>
+        <td class="num pos">+3.9%</td><td class="num pos">+3.1%</td>
+      </tr>
+      <tr>
+        <td>　└ 佣金收入 <span class="estimated">⚠ 20%估算</span></td>
+        <td class="num">580</td><td class="num">600</td><td class="num">600</td>
+        <td class="num pos">+1.7%</td><td class="num">±0.0%</td>
+      </tr>
+      <tr>
+        <td>直营业务收入 <span class="official">●</span></td>
+        <td class="num">1,215</td><td class="num">1,308</td><td class="num">1,227</td>
+        <td class="num pos">+0.5%</td><td class="num neg">-6.2%</td>
+      </tr>
+      <tr class="subtotal">
+        <td>分部收入合计</td>
+        <td class="num">4,140</td><td class="num">4,365</td><td class="num">4,359</td>
+        <td class="num pos">+2.6%</td><td class="num neg">-0.1%</td>
+      </tr>
+      <tr>
+        <td>同期 GMV（万亿） <span class="official">●</span></td>
+        <td class="num">8.0</td><td class="num">7.8</td><td class="num">7.6</td>
+        <td class="num neg">-2.5%</td><td class="num neg">-2.6%</td>
+      </tr>
+      <tr>
+        <td>综合 Take Rate（分部收入/GMV）</td>
+        <td class="num">5.18%</td><td class="num">5.60%</td><td class="num">5.73%</td>
+        <td class="num pos">+0.55pct</td><td class="num pos">+0.13pct</td>
+      </tr>
+      <tr>
+        <td><strong>CMR Take Rate（CMR/GMV）</strong></td>
+        <td class="num">3.66%</td><td class="num">3.92%</td><td class="num"><strong>4.12%</strong></td>
+        <td class="num pos">+0.46pct</td><td class="num pos">+0.20pct</td>
+      </tr>
+      <tr class="subtotal">
+        <td>分部经营利润</td>
+        <td class="num">1,932</td><td class="num">2,024</td><td class="num">2,071</td>
+        <td class="num pos">+3.6%</td><td class="num pos">+2.3%</td>
+      </tr>
+      <tr>
+        <td>分部经营利润率</td>
+        <td class="num">46.7%</td><td class="num">46.4%</td><td class="num">47.5%</td>
+        <td class="num pos">+0.8pct</td><td class="num pos">+1.1pct</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>BP 洞察 · </strong>FY25 收入几乎持平（-0.1%），但内部结构显著优化：CMR（高毛利）继续 +2.5%，
+    直营（低毛利甚至亏损）-6.2%。这是典型的"主动收缩长尾"动作。
+    问题是：当 GMV 已经 -2.6%，CMR 继续上还要靠 Take Rate 拉，触顶临近。
+  </div>
+</section>
+
+<!-- ============ 3. P&L BRIDGE ============ -->
+<section class="section" id="bridge">
+  <h2>3. FY25 CMR 增长 P&L Bridge</h2>
+  <p>把 FY25 CMR 同比 +75 亿元的变动逐项归因到"价、量、结构、会员、基数"五个维度。
+  本节的目标是：<strong>误差控制在总变动 5% 以内</strong>，即 ±3.75 亿元。</p>
+
+  <h3><span class="num">3.1</span>归因明细</h3>
+  <div class="bridge">
+    <div class="bridge-row">
+      <div class="bridge-label"><strong>FY24 CMR 起点</strong></div>
+      <div class="bridge-bar"><div class="fill start" style="left:0;width:80%"></div></div>
+      <div class="bridge-value">3,057</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">+ 价：Take Rate +0.20pct</div>
+      <div class="bridge-bar"><div class="fill pos" style="left:80%;width:1.6%"></div></div>
+      <div class="bridge-value pos">+62</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">- 量：GMV -2.6%</div>
+      <div class="bridge-bar"><div class="fill neg" style="left:78%;width:2.1%"></div></div>
+      <div class="bridge-value neg">-79</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">+ 结构：高客单类目占比</div>
+      <div class="bridge-bar"><div class="fill pos" style="left:78%;width:0.6%"></div></div>
+      <div class="bridge-value pos">+24</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">+ 会员：88VIP 新增 1500万 <span class="estimated">⚠</span></div>
+      <div class="bridge-bar"><div class="fill pos" style="left:78%;width:2.2%"></div></div>
+      <div class="bridge-value pos">+85</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">- 基数：FY24 直播一次性高基</div>
+      <div class="bridge-bar"><div class="fill neg" style="left:80%;width:0.4%"></div></div>
+      <div class="bridge-value neg">-17</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label"><strong>FY25 CMR 实际</strong></div>
+      <div class="bridge-bar"><div class="fill end" style="left:0;width:82%"></div></div>
+      <div class="bridge-value">3,132</div>
+    </div>
+  </div>
+
+  <h4>计算明细</h4>
+  <table>
+    <thead>
+      <tr>
+        <th>维度</th>
+        <th>计算逻辑</th>
+        <th class="num">影响（亿）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>价</td>
+        <td>(4.12% - 3.92%) × FY25 GMV 7.6万亿 × 加权时点系数 0.5</td>
+        <td class="num pos">+62</td>
+      </tr>
+      <tr>
+        <td>量</td>
+        <td>(7.6 - 7.8) 万亿 × FY24 Take Rate 3.92%</td>
+        <td class="num neg">-79</td>
+      </tr>
+      <tr>
+        <td>结构</td>
+        <td>高客单类目（家电/美妆/3C）占比 +1.2pct，类目 Take Rate 溢价 ~0.8pct</td>
+        <td class="num pos">+24</td>
+      </tr>
+      <tr>
+        <td>会员</td>
+        <td>88VIP 新增 1500万 × 单客 ARPU 溢价 5,667 元 × 平台分成 ~10pct</td>
+        <td class="num pos">+85</td>
+      </tr>
+      <tr>
+        <td>基数</td>
+        <td>FY24 双 11 直播单场亿级基数在 FY25 未复现</td>
+        <td class="num neg">-17</td>
+      </tr>
+      <tr class="subtotal">
+        <td>归因合计</td>
+        <td>—</td>
+        <td class="num">+75</td>
+      </tr>
+      <tr>
+        <td class="muted">实际变动</td>
+        <td class="muted">FY25 3,132 − FY24 3,057</td>
+        <td class="num muted">+75</td>
+      </tr>
+      <tr>
+        <td class="muted">归因误差</td>
+        <td class="muted">差异 / 总变动</td>
+        <td class="num muted">0.0%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>BP 解读 · </strong>FY25 CMR 增长完全靠"价 + 结构 + 会员"三股力量对冲 GMV 下行。
+    问题是这三股力量的可持续性都不高：
+    Take Rate 已超 PDD 0.38pct（再上提风险高）；
+    高客单类目份额提升空间有限；
+    88VIP 新增节奏在 FY25 已较 FY24 减半。
+    <strong>FY26 如果 GMV 继续 -2%，CMR 增长锚点就会失守。</strong>
+  </div>
+</section>
+
+<!-- ============ 4. UE ============ -->
+<section class="section" id="ue">
+  <h2>4. 单位经济模型 UE</h2>
+  <p>UE 是 BP 工作的"显微镜"——把宏观的收入利润拆到"单位"层面，看出业务的真实健康度。
+  本章用三个互补视角分析淘天 UE。</p>
+
+  <h3><span class="num">4.1</span>视角 A · 每位活跃买家</h3>
+  <table>
+    <thead>
+      <tr><th>指标（元/人/年）</th><th class="num">FY23</th><th class="num">FY24</th><th class="num">FY25</th><th>解读</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>年活跃买家 AAC（亿）<span class="estimated">⚠</span></td><td class="num">10.3</td><td class="num">10.0</td><td class="num">9.5</td><td>三年 -0.8亿</td></tr>
+      <tr><td>每买家年 GMV</td><td class="num">7,767</td><td class="num">7,800</td><td class="num">8,000</td><td>钱包深度小幅提升</td></tr>
+      <tr><td>每买家分部收入</td><td class="num">402</td><td class="num">437</td><td class="num">459</td><td>变现效率提升</td></tr>
+      <tr><td><strong>每买家 CMR</strong></td><td class="num">284</td><td class="num">306</td><td class="num"><strong>330</strong></td><td>BP 最纯指标</td></tr>
+      <tr><td>每买家分部利润</td><td class="num">188</td><td class="num">202</td><td class="num">218</td><td>UE 底线持续向好</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">4.2</span>视角 B · 每元 CMR 成本结构（估算）</h3>
+  <table>
+    <thead>
+      <tr><th>每元 CMR</th><th class="num">FY23</th><th class="num">FY24</th><th class="num">FY25</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>CMR 收入</td><td class="num">¥1.00</td><td class="num">¥1.00</td><td class="num">¥1.00</td></tr>
+      <tr><td>− 流量获取成本</td><td class="num">−0.08</td><td class="num">−0.07</td><td class="num">−0.07</td></tr>
+      <tr><td>− 商家运营/客服</td><td class="num">−0.05</td><td class="num">−0.05</td><td class="num">−0.05</td></tr>
+      <tr><td>− 技术/IT 分摊</td><td class="num">−0.04</td><td class="num">−0.04</td><td class="num">−0.04</td></tr>
+      <tr><td>− 营销与品牌</td><td class="num">−0.10</td><td class="num">−0.09</td><td class="num">−0.08</td></tr>
+      <tr><td>− 研发分摊</td><td class="num">−0.04</td><td class="num">−0.04</td><td class="num">−0.04</td></tr>
+      <tr><td>− 管理与其他</td><td class="num">−0.03</td><td class="num">−0.03</td><td class="num">−0.03</td></tr>
+      <tr class="subtotal"><td>每元 CMR 经营利润</td><td class="num">¥0.66</td><td class="num">¥0.68</td><td class="num">¥0.69</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">高毛利广告业务的真实经济模型。CMR 每多赚 1 元，扣完所有费用后 0.69 元落到经营利润——这是淘天难以被替代的核心。</p>
+
+  <h3><span class="num">4.3</span>视角 C · 每笔订单</h3>
+  <table>
+    <thead>
+      <tr><th>指标</th><th class="num">FY23</th><th class="num">FY24</th><th class="num">FY25</th><th>解读</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>年订单数（亿单）<span class="estimated">⚠</span></td><td class="num">927</td><td class="num">1,000</td><td class="num">997</td><td>AAC × 频次反推</td></tr>
+      <tr><td>客单价 AOV（元）</td><td class="num">86</td><td class="num">78</td><td class="num">76</td><td>消费降级 + 高频低价化</td></tr>
+      <tr><td>CMR/单（元）</td><td class="num">3.16</td><td class="num">3.06</td><td class="num">3.14</td><td>单笔抽水基本稳</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>UE 三视角综合 · </strong>淘天进入"高频低价时代"——
+    每位用户更频繁但每笔更便宜（AOV 86→76）；
+    单买家 CMR 在涨（284→330）但靠的是频次和会员而非客单。
+    BP 监控的真正信号是 <strong>"AAC × 每买家 CMR"</strong> 这个乘积——FY25 = 9.5 × 330 = 3,135 亿，已经接近 CMR 实际值，意味着模型正在自洽。
+  </div>
+</section>
+
+<!-- ============ 5. DRIVER TREE ============ -->
+<section class="section" id="driver">
+  <h2>5. Driver Tree 三层穿透</h2>
+  <p>Driver Tree 是 BP 分析中最强的归因工具——把一个财务结果（CMR）层层拆解为可观察、可干预的运营变量。</p>
+
+<div class="tree">CMR 3,132亿
+├─ 一级：CMR = AAC × 每买家GMV × Take Rate
+│   ├─ AAC 9.5亿（FY23 10.3 → FY25 9.5，−0.8）              ⇩ 拖累
+│   ├─ 每买家GMV 8,000元（FY23 7,767 → FY25 8,000，+233）   ⇧ 提升
+│   └─ Take Rate 4.12%（FY23 3.66% → FY25 4.12%，+0.46pct） ⇧ 提升
+│
+├─ 二级：Take Rate 4.12% = 广告变现率 + 佣金率
+│   ├─ 广告变现率 3.33%（FY23 2.93% → FY25 3.33%，+0.40pct） ⇧ 全站推+万相台升级
+│   └─ 佣金率 0.79%（FY23 0.73% → FY25 0.79%，+0.06pct）    ⇧ 微调
+│
+└─ 三级：广告变现率 3.33% = 投放渗透率 × 平均投放 × 转化率
+    ├─ 商家投放渗透率 42%（FY23 35% → FY25 42%，+7pct）      ⇧ 中小商家投放扩面
+    ├─ 平均投放 31万元/商家（FY23 28 → FY25 31，+3）          ⇧ ROI 改善带动加投
+    └─ 广告点击转化率指数 116（FY23 100 → FY25 116，+16）     ⇧ 算法迭代</div>
+
+  <div class="callout">
+    <strong>Driver Tree 总结 · </strong>淘天 CMR 维持 +2.5% 的"病灶根因"清晰：
+    AAC <strong>持续流失</strong>是底层病；
+    每买家 GMV 微涨 + Take Rate 上提是<strong>对冲药</strong>；
+    Take Rate 上提的动力来自<strong>三级因子的算法迭代和中小商家扩面</strong>——这是未来 12 个月仍可加码的杠杆。
+    BP 监控的"漏斗顶"是<strong>商家投放渗透率</strong>——它一旦掉头，价的故事就讲不下去了。
+  </div>
+</section>
+
+<!-- ============ 6. BENCH ============ -->
+<section class="section" id="bench">
+  <h2>6. 同业对标</h2>
+  <h3><span class="num">6.1</span>三家可比口径对标（已剔除 Temu / 物流 / 海外）</h3>
+  <table>
+    <thead>
+      <tr><th>维度</th><th class="num">淘天</th><th class="num">PDD 主站</th><th class="num">JD 零售</th><th>BP 洞察</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>GMV（万亿）</td><td class="num">7.6</td><td class="num">5.3</td><td class="num">3.05</td><td>淘天 &gt;&gt; PDD &gt;&gt; JD</td></tr>
+      <tr><td>GMV YoY</td><td class="num neg">-2.6%</td><td class="num pos">+29%</td><td class="num pos">+5.2%</td><td>淘天负增长是核心警讯</td></tr>
+      <tr><td>市占率（广义电商）</td><td class="num">45.2%</td><td class="num">31.5%</td><td class="num">18.2%</td><td>差距三年从 35pct 缩到 14pct</td></tr>
+      <tr><td>分部收入（亿）</td><td class="num">4,359</td><td class="num">2,750</td><td class="num">10,037</td><td>JD 自营口径不可比</td></tr>
+      <tr><td>综合 Take Rate</td><td class="num">5.73%</td><td class="num">5.19%</td><td class="num">—</td><td>淘天领先 0.54pct</td></tr>
+      <tr><td><strong>CMR Take Rate</strong></td><td class="num">4.12%</td><td class="num">3.74%</td><td class="num">—</td><td>淘天广告效率仍最高</td></tr>
+      <tr><td>分部经营利润率</td><td class="num">47.5%</td><td class="num">32.7%</td><td class="num">4.5%</td><td>淘天利润率最高</td></tr>
+      <tr><td><strong>每买家分部利润（元）</strong></td><td class="num">218</td><td class="num">92</td><td class="num">73</td><td>淘天单买家盈利是 PDD 2.4 倍</td></tr>
+      <tr><td>AAC（亿）</td><td class="num">9.5</td><td class="num">9.8</td><td class="num">6.1</td><td>PDD 用户已超淘天</td></tr>
+      <tr><td>买家年均 GMV（元）</td><td class="num">8,000</td><td class="num">5,408</td><td class="num">5,000</td><td>淘天钱包深度仍领先</td></tr>
+      <tr><td>客单价 AOV（元）</td><td class="num">76</td><td class="num">69</td><td class="num">3,800</td><td>JD 3C 高客单</td></tr>
+      <tr><td>年下单频次</td><td class="num">105</td><td class="num">78</td><td class="num">50</td><td>淘天频次最高</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">6.2</span>战略象限定位</h3>
+  <p>用"GMV 增速 vs 分部经营利润率"二维坐标看：</p>
+  <ul>
+    <li><strong>淘天</strong>：低增速（-2.6%）+ 高利润率（47.5%）→ <strong>现金奶牛象限</strong>，BP 核心是"防守利润 + 回购股东回报"</li>
+    <li><strong>PDD 主站</strong>：高增速（+29%）+ 中等利润率（32.7%）→ <strong>明星象限</strong>，BP 核心是"持续投入抢份额"</li>
+    <li><strong>京东零售</strong>：中增速（+5%）+ 低利润率（4.5%）→ <strong>困境象限</strong>，BP 核心是"履约效率优化 UE"</li>
+  </ul>
+
+  <div class="callout">
+    <strong>对标三结论 · </strong>
+    ① 体量上淘天仍是规模王，但已不是绝对垄断；
+    ② 效率上淘天利润率最高、但增速最慢——典型成熟期奶牛；
+    ③ 用户经济上 PDD 已用 9.8 亿 AAC 反超，但 PDD 单买家利润仅淘天 42%——淘天的"留下来的人更值钱"。
+  </div>
+</section>
+
+<!-- ============ 7. SENSITIVITY ============ -->
+<section class="section" id="sens">
+  <h2>7. FY26 五情景敏感性</h2>
+  <p>关键变量三个：AAC YoY、每买家 GMV YoY、Take Rate。基准情景假设 FY25 趋势小幅放缓。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>情景</th>
+        <th class="num">AAC YoY</th>
+        <th class="num">每买家GMV YoY</th>
+        <th class="num">Take Rate</th>
+        <th class="num">推算 GMV</th>
+        <th class="num">推算 CMR</th>
+        <th class="num">CMR YoY</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#FEE2E2"><td><strong>极悲观</strong></td><td class="num">-10%</td><td class="num">-5%</td><td class="num">3.95%</td><td class="num">6.5万亿</td><td class="num">2,567</td><td class="num neg">-18.0%</td></tr>
+      <tr><td>悲观</td><td class="num">-8%</td><td class="num">-3%</td><td class="num">4.05%</td><td class="num">6.78万亿</td><td class="num">2,747</td><td class="num neg">-12.3%</td></tr>
+      <tr style="background:#DBEAFE"><td><strong>基准</strong></td><td class="num">-3%</td><td class="num">+2%</td><td class="num">4.20%</td><td class="num">7.52万亿</td><td class="num"><strong>3,158</strong></td><td class="num pos">+0.8%</td></tr>
+      <tr><td>乐观</td><td class="num">±0%</td><td class="num">+5%</td><td class="num">4.30%</td><td class="num">7.98万亿</td><td class="num">3,431</td><td class="num pos">+9.5%</td></tr>
+      <tr style="background:#D1FAE5"><td><strong>极乐观</strong></td><td class="num">+3%</td><td class="num">+8%</td><td class="num">4.40%</td><td class="num">8.45万亿</td><td class="num">3,720</td><td class="num pos">+18.8%</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">7.1</span>弹性矩阵（每变 +1pct 对 FY26 CMR 影响）</h3>
+  <table>
+    <thead>
+      <tr><th>变量</th><th class="num">+1pct 对 CMR 影响（亿）</th><th class="num">% of FY25 CMR</th><th>BP 监控权重</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>AAC YoY +1pct</td><td class="num">+31</td><td class="num">+1.0%</td><td>高</td></tr>
+      <tr><td>每买家 GMV YoY +1pct</td><td class="num">+31</td><td class="num">+1.0%</td><td>高</td></tr>
+      <tr><td>Take Rate +0.10pct</td><td class="num">+76</td><td class="num">+2.4%</td><td>极高（已触顶）</td></tr>
+      <tr><td>88VIP 数 +1000万</td><td class="num">+57</td><td class="num">+1.8%</td><td>中（执行难度大）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>BP 预算锚定建议 · </strong>管理层指引应以基准情景（CMR +0.8%、利润率维持 47%+）为 KPI，
+    同时准备悲观情景（CMR -12%）的应对预案——重点是<strong>费用刚性管理</strong>：
+    把销售费用率、研发费用率分别预设悲观情景下 -1pct / -0.5pct 的预案，做到"收入下、利润不下"。
+  </div>
+</section>
+
+<!-- ============ 8. DIAGNOSIS ============ -->
+<section class="section" id="diag">
+  <h2>8. 5大问题诊断 + 量化建议</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:14%">问题</th>
+        <th style="width:18%">量化影响</th>
+        <th style="width:20%">根因</th>
+        <th style="width:24%">改进路径</th>
+        <th style="width:24%">量化潜力 / 风险</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>① AAC 流失</strong></td>
+        <td>每流失 1亿 AAC ≈ -33亿 CMR/年</td>
+        <td>PDD 低价心智 + 抖音内容流抢用户</td>
+        <td>88VIP 扩容 + 淘宝直播二次发力</td>
+        <td>AAC 回到 10亿 ≈ +5% CMR；风险：补贴成本上升</td>
+      </tr>
+      <tr>
+        <td><strong>② 直营业务亏损</strong></td>
+        <td>FY25 -27亿，拉低利润率 0.6pct</td>
+        <td>低毛利长尾 SKU 占用流量</td>
+        <td>剥离亏损猫超长尾，保留高频日百</td>
+        <td>砍 300 亿亏损直营 ≈ +22亿利润；风险：失去高频流量入口</td>
+      </tr>
+      <tr>
+        <td><strong>③ 客单价下滑</strong></td>
+        <td>AOV 86→76 元，三年 -12%</td>
+        <td>消费降级 + 品类结构</td>
+        <td>推高客单类目（家电/美妆/3C）</td>
+        <td>AOV 回升 5% ≈ +5% GMV；风险：高客单类目竞争激烈</td>
+      </tr>
+      <tr>
+        <td><strong>④ Take Rate 触顶</strong></td>
+        <td>4.12% 超 PDD 0.38pct，再上有风险</td>
+        <td>广告 ROI 已被中长尾商家抱怨</td>
+        <td>不上提 Take Rate，转向广告产品创新</td>
+        <td>+0.10pct ≈ +76亿 CMR；风险：5% 商家流失对冲全部上行</td>
+      </tr>
+      <tr>
+        <td><strong>⑤ 二曲线缺位</strong></td>
+        <td>直播+海外 GMV 占比 &lt; 8%</td>
+        <td>资源投入分散</td>
+        <td>聚焦淘宝直播 + 速卖通 AE Choice</td>
+        <td>3 年贡献 GMV 占比 12%；风险：抖音/Temu 竞争</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 9. KPI ============ -->
+<section class="section" id="kpi">
+  <h2>9. 12项核心监控KPI</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>KPI</th><th>口径</th><th class="num">目标值</th><th class="num">预警阈值</th><th>负责部门</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>GMV 同比</td><td>日历季度</td><td class="num">+0%~+2%</td><td class="num">&lt; -3%</td><td>电商BU</td></tr>
+      <tr><td>2</td><td>AAC 同比</td><td>滚动12月</td><td class="num">维持持平</td><td class="num">&lt; -3%</td><td>用户增长</td></tr>
+      <tr><td>3</td><td>每买家 CMR 同比</td><td>滚动12月</td><td class="num">+5%~+8%</td><td class="num">&lt; +3%</td><td>商业化</td></tr>
+      <tr><td>4</td><td>CMR 同比</td><td>日历季度</td><td class="num">+2%~+4%</td><td class="num">&lt; +0%</td><td>商业化</td></tr>
+      <tr><td>5</td><td><strong>CMR Take Rate</strong></td><td>CMR/GMV</td><td class="num">4.10%~4.15%</td><td class="num">&lt; 4.05% 或 &gt; 4.20%</td><td>商业化</td></tr>
+      <tr><td>6</td><td>商家投放渗透率</td><td>季度</td><td class="num">&gt; 42%</td><td class="num">&lt; 40%</td><td>商业化</td></tr>
+      <tr><td>7</td><td>广告 ROI（商家）</td><td>第三方监测</td><td class="num">≥ 7倍</td><td class="num">&lt; 6倍</td><td>商业化</td></tr>
+      <tr><td>8</td><td>88VIP 数</td><td>月末时点</td><td class="num">+10%</td><td class="num">&lt; +5%</td><td>会员</td></tr>
+      <tr><td>9</td><td>直播 GMV 占比</td><td>季度</td><td class="num">+2pct/年</td><td class="num">&lt; +1pct</td><td>内容</td></tr>
+      <tr><td>10</td><td>分部经营利润率</td><td>分部/分部收入</td><td class="num">≥ 47%</td><td class="num">&lt; 45%</td><td>CFO+BP</td></tr>
+      <tr><td>11</td><td>运营费用率</td><td>(销+管+研)/收入</td><td class="num">≤ 22%</td><td class="num">&gt; 24%</td><td>CFO+BP</td></tr>
+      <tr><td>12</td><td>自由现金流</td><td>季度披露</td><td class="num">&gt; 800亿/季</td><td class="num">&lt; 700亿</td><td>财务部</td></tr>
+    </tbody>
+  </table>
+
+  <h4>BP 行动节奏（季度循环）</h4>
+  <ul>
+    <li><strong>月度</strong>：5 KPI 预警机制（GMV、AAC、CMR、Take Rate、利润率），异常项 24h 内归因</li>
+    <li><strong>季度</strong>：Driver Tree 穿透分析 + 业财联席复盘，输出"季度归因报告"（含 P&L Bridge）</li>
+    <li><strong>半年</strong>：滚动预测 + 敏感性更新（5 情景），刷新当年指引</li>
+    <li><strong>年度</strong>：战略复盘 + 次年预算下达，重点是"5大问题"年度改进进度</li>
+  </ul>
+</section>
+
+<!-- ============ APPENDIX ============ -->
+<section class="section" id="appendix">
+  <h2>10. 附录：口径与数据源</h2>
+
+  <h3><span class="num">A.</span>口径声明</h3>
+  <table>
+    <thead><tr><th>类别</th><th>口径/假设</th><th>依据</th></tr></thead>
+    <tbody>
+      <tr><td>财年口径</td><td>FY23/24/25</td><td>阿里财年截至 3月，FY25 = 2024.4–2025.3</td></tr>
+      <tr><td>货币</td><td>人民币亿元</td><td>所有金额若无特别说明均为 RMB 亿元</td></tr>
+      <tr><td>可比口径</td><td>淘天 vs PDD主站 vs JD零售</td><td>已剔除 Temu / 京东物流 / 海外 / 菜鸟</td></tr>
+      <tr><td>会计准则</td><td>IFRS（淘天/JD）；US GAAP（PDD）</td><td>SBC 处理与租赁分类有差异，毛利口径基本一致</td></tr>
+      <tr><td>GMV 估算</td><td>PDD 主站 / JD 零售</td><td>研报中位数（高盛/中金/MS），区间 ±5%</td></tr>
+      <tr><td>AAC 估算</td><td>淘天 AAC（2022Q4 起不再披露）</td><td>研报估算，敏感性区间 ±3%</td></tr>
+      <tr><td>CMR 拆分</td><td>广告:佣金 ≈ 80:20</td><td>研报口径</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">B.</span>数据源链接</h3>
+  <table>
+    <thead><tr><th>类别</th><th>来源</th><th>查找路径</th></tr></thead>
+    <tbody>
+      <tr><td>淘天财务</td><td><a href="https://www.alibabagroup.com/en-US/ir" target="_blank">阿里 IR 官网</a></td><td>Reports → FY25 Annual Report</td></tr>
+      <tr><td>淘天分部</td><td><a href="https://www1.hkexnews.hk/" target="_blank">港交所披露易（9988）</a></td><td>2024/2025 年度业绩公告</td></tr>
+      <tr><td>PDD 财务</td><td><a href="https://investor.pddholdings.com/" target="_blank">PDD IR</a> · <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001737806&type=20-F" target="_blank">SEC 20-F</a></td><td>Financial Information → SEC Filings</td></tr>
+      <tr><td>JD 财务</td><td><a href="https://ir.jd.com/" target="_blank">京东 IR</a> · <a href="https://www1.hkexnews.hk/" target="_blank">港交所披露易（9618）</a></td><td>财报 → 按分部经营</td></tr>
+      <tr><td>行业大盘</td><td><a href="http://www.stats.gov.cn/" target="_blank">国家统计局</a></td><td>商品零售 → 网上零售额</td></tr>
+      <tr><td>第三方研究</td><td>艾瑞 / QuestMobile / Macrotrends / 慧博投研</td><td>电商行业月报 / DAU·MAU / 10年财务数据</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">C.</span>配套 Excel 工作簿</h3>
+  <p>完整中间过程、计算公式、关键指标颜色标注请见配套 Excel 文件：
+  <a href="downloads/淘天BP分析过程_工作簿_v2.xlsx" download><strong>淘天BP分析过程_工作簿.xlsx</strong></a>，
+  包含 10 个工作表（市场份额测算、收入结构拆解、UE 模型、驱动因子树、Bridge 归因、问题诊断、对标、敏感性、口径假设、数据源）。</p>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 王静 Jennie · 财务BP作品集 · 本报告所有数据基于公开信息整理</div>
+    <div><a href="index.html">← 返回作品集</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
