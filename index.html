@@ -12,7 +12,10 @@
     --muted: #64748B;
     --line: #E2E8F0;
     --bg: #FFFFFF;
-    --bg-soft: #F8FAFC;
+    --bg-soft: #F8FAFC;       /* 极淡冷灰 */
+    --bg-warm: #FAF8F4;       /* 极淡米色 */
+    --bg-cool: #F4F7FB;       /* 极淡冷蓝 */
+    --bg-mint: #F4F8F6;       /* 极淡薄荷 */
     --accent: #1E3A8A;
     --accent-soft: #DBEAFE;
     --accent-hover: #1E40AF;
@@ -47,9 +50,31 @@
     color: var(--ink-soft); margin-left: 28px; font-size: 15px;
   }
 
-  /* Hero */
+  /* Hero —— 极淡冷蓝色背景 */
   .hero {
+    background: linear-gradient(180deg, var(--bg-cool) 0%, var(--bg) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(30, 58, 138, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    bottom: -150px; left: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(30, 58, 138, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner {
     max-width: 1080px; margin: 0 auto; padding: 96px 32px 72px;
+    position: relative;
   }
   .hero h1 {
     font-size: 56px; font-weight: 800; letter-spacing: -0.5px;
@@ -71,96 +96,656 @@
   }
 
   /* Section heading */
-  .section { max-width: 1080px; margin: 0 auto; padding: 64px 32px; }
+  .section {
+    max-width: 1080px; margin: 0 auto; padding: 80px 32px;
+  }
+  .section-wrapper {
+    border-top: 1px solid var(--line);
+  }
+  .section-warm { background: var(--bg-warm); }
+  .section-cool { background: var(--bg-soft); }
+  .section-mint { background: var(--bg-mint); }
+  .section-neutral { background: #F7F9FC; }
+  .section-white { background: var(--bg); }
+  .section-paleblue { background: linear-gradient(180deg, #FAFCFF 0%, #F3F7FC 100%); }
   .section-head {
-    display: flex; align-items: baseline; justify-content: space-between;
-    margin-bottom: 36px; padding-bottom: 16px;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    align-items: baseline;
+    gap: 32px;
+    padding-bottom: 20px;
     border-bottom: 1px solid var(--line);
   }
+  .section-head .eyebrow {
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 2px;
+    font-style: italic;
+  }
+  .section-head .eyebrow::before {
+    content: "—";
+    color: var(--accent);
+    margin-right: 12px;
+    font-style: normal;
+  }
   .section-head h2 {
-    font-size: 28px; font-weight: 700; color: var(--ink);
+    font-size: 32px; font-weight: 700; color: var(--ink);
+    letter-spacing: -0.5px;
   }
   .section-head .count {
-    font-size: 13px; color: var(--muted); letter-spacing: 0.5px;
+    font-size: 12px; color: var(--muted); letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  @media (max-width: 720px) {
+    .section-head {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
   }
 
-  /* Case grid */
-  .cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  /* Case 横向滑动布局 —— 默认显示 1+2，往右滑出现 3 */
+  .cases-scroll {
+    position: relative;
+    margin: 0 -32px;  /* 抵消 section padding，让滑动区域贴边 */
+  }
+  .cases-track {
+    display: flex;
+    gap: 20px;
+    padding: 4px 32px 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 32px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-soft) transparent;
+  }
+  .cases-track::-webkit-scrollbar {
+    height: 6px;
+  }
+  .cases-track::-webkit-scrollbar-track {
+    background: var(--bg-soft);
+    border-radius: 3px;
+  }
+  .cases-track::-webkit-scrollbar-thumb {
+    background: var(--accent-soft);
+    border-radius: 3px;
+  }
+  .cases-track::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+  }
+  .cases-track .case {
+    flex: 0 0 calc((100% - 20px) / 2);  /* 每张卡 = (容器宽 − 1个 gap) / 2，正好显示 2 张 */
+    scroll-snap-align: start;
+    min-width: 360px;
+  }
+  /* 滑动提示渐变 */
+  .cases-scroll::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 24px;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, var(--bg) 80%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .section-white .cases-scroll::after {
+    background: linear-gradient(90deg, transparent, var(--bg) 80%);
+  }
+
+  /* 滑动指示器 */
+  .scroll-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .scroll-hint .arrow-r {
+    display: inline-block;
+    color: var(--accent);
+    animation: slide-arrow 1.6s ease-in-out infinite;
+  }
+  @keyframes slide-arrow {
+    0%, 100% { transform: translateX(0); opacity: 0.6; }
+    50% { transform: translateX(6px); opacity: 1; }
+  }
+  .scroll-dots {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .scroll-dots span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+  .scroll-dots span.active {
+    width: 18px;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+
+  @media (max-width: 720px) {
+    .cases-track .case { flex: 0 0 88%; min-width: 0; }
+  }
   .case {
-    border: 1px solid var(--line); border-radius: 12px;
-    padding: 28px; background: var(--bg);
-    transition: all 0.2s ease;
+    --c-amber: #B89048;
+    border: 1px solid var(--line); border-radius: 16px;
+    padding: 32px; background: var(--bg);
+    transition: all 0.25s ease;
     display: flex; flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+  .case::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
   }
   .case:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
-    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+    border-color: var(--accent-soft);
   }
-  .case.placeholder {
-    background: var(--bg-soft); border-style: dashed;
-    color: var(--muted);
+  .case:hover::before { transform: scaleX(1); }
+
+  /* Case 编号大字 */
+  .case .case-number {
+    position: absolute;
+    top: 24px; right: 28px;
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 56px;
+    font-weight: 300;
+    color: var(--accent-soft);
+    line-height: 1;
+    letter-spacing: -2px;
+    pointer-events: none;
   }
+  .case-amber .case-number { color: #FCEFC9; }
+  .case-pending .case-number { color: #ECEFF4; }
+
+  /* 进行中 case 占位卡 */
+  .case-pending {
+    background: linear-gradient(180deg, var(--bg) 0%, #F8FAFC 100%);
+    border: 1px dashed var(--line);
+  }
+  .case-pending:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--muted-2, #94A3B8);
+  }
+  .case-pending::before { display: none; }
+  .case-pending .tag {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+  .case-pending .tag::before { background: #B89048; }
+  .case-pending h3 { color: var(--ink-soft); }
+  .case-pending .case-summary { color: var(--muted); }
+  .case-pending .case-cta {
+    border-top-color: var(--line);
+  }
+  .case-pending .case-cta .pending-text {
+    color: var(--muted); font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .case-pending .case-cta .pending-text::before {
+    content: "";
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #F5C842;
+    box-shadow: 0 0 0 4px #FEF3C7;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
   .case .tag {
-    display: inline-block; font-size: 11px; letter-spacing: 1px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 1.2px;
     color: var(--accent); background: var(--accent-soft);
-    padding: 4px 10px; border-radius: 999px; font-weight: 600;
+    padding: 5px 12px; border-radius: 999px; font-weight: 600;
     align-self: flex-start;
   }
+  .case .tag::before {
+    content: ""; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent);
+  }
+  /* Case 02 用浅黄做 tag —— 黄色作为整个网站唯一的"点睛"色 */
+  .case-amber .tag {
+    color: #92400E;
+    background: #FEF3C7;
+  }
+  .case-amber .tag::before { background: #B89048; }
+
   .case h3 {
-    margin-top: 14px; font-size: 22px; font-weight: 700;
-    color: var(--ink);
+    margin-top: 18px; font-size: 22px; font-weight: 700;
+    color: var(--ink); letter-spacing: -0.2px;
+    max-width: 85%;  /* 给右上角的大编号让出空间 */
   }
   .case .case-meta {
     margin-top: 6px; font-size: 13px; color: var(--muted);
   }
   .case .case-summary {
     margin-top: 16px; font-size: 15px; color: var(--ink-soft);
-    flex-grow: 1;
+    flex-grow: 1; line-height: 1.7;
   }
   .case .case-tags {
-    margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px;
   }
   .case .case-tags span {
-    font-size: 12px; color: var(--muted);
-    border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px;
+    font-size: 12px; color: var(--ink-soft);
+    background: var(--bg-cool);
+    border: 1px solid transparent;
+    padding: 4px 10px; border-radius: 6px;
+  }
+  .case-amber .case-tags span {
+    background: #FEF7E4;
   }
   .case .case-cta {
-    margin-top: 22px; display: flex; gap: 12px; align-items: center;
+    margin-top: 24px; padding-top: 20px;
+    border-top: 1px solid var(--line);
+    display: flex; gap: 10px; align-items: center;
   }
   .btn {
     display: inline-block; padding: 10px 18px; border-radius: 8px;
     font-size: 14px; font-weight: 600; cursor: pointer;
     transition: all 0.15s ease;
   }
+  /* 主按钮 - 两个 case 都用同一深蓝，统一基调 */
   .btn-primary {
     background: var(--accent); color: #FFF !important;
+    position: relative;
+    overflow: hidden;
   }
-  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 18px; right: 18px;
+    height: 2px;
+    background: transparent;
+    transition: background 0.2s ease;
+  }
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+  }
+  /* Case 02 的按钮 hover 时底部浮现一条浅黄细线，作为"独有暗号" */
+  .case-amber .btn-primary:hover::after {
+    background: #F5C842;
+  }
   .btn-ghost {
     border: 1px solid var(--line); color: var(--ink-soft);
+    background: var(--bg);
   }
   .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .case-amber .btn-ghost:hover {
+    border-color: #B89048; color: #92400E;
+  }
 
-  /* About */
-  .about {
-    background: var(--bg-soft); border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
+  /* About —— 整页最重的视觉锚点 */
   .about-grid {
-    display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 56px;
+    display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 72px;
+    align-items: start;
+    margin-top: 8px;
   }
-  .about p {
-    color: var(--ink-soft); font-size: 16px; margin-bottom: 16px;
+  .about-prose { position: relative; }
+  .about-prose .opening-mark {
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 96px;
+    color: #FCEFC9;            /* 浅黄做"大引号" */
+    line-height: 0.4;
+    letter-spacing: -2px;
+    user-select: none;
+    margin-left: -8px;
+    margin-bottom: -8px;
+    display: block;
   }
-  .about ul { list-style: none; padding: 0; }
+  .about-prose .pull {
+    font-family: Georgia, "Songti SC", "STSong", serif;
+    font-size: 28px;
+    line-height: 1.5;
+    color: var(--ink);
+    font-weight: 400;
+    margin-bottom: 32px;
+    letter-spacing: 0.2px;
+    position: relative;
+    padding-left: 28px;
+    border-left: 3px solid var(--accent);
+  }
+  .about-prose .pull em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .about-prose .pull .highlight {
+    background: linear-gradient(180deg, transparent 60%, #FCEFC9 60%);
+    padding: 0 2px;
+    font-style: normal;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .about-prose p {
+    color: var(--ink-soft); font-size: 16px;
+    margin-bottom: 16px;
+    line-height: 1.85;
+  }
+  .about-prose p strong {
+    color: var(--ink); font-weight: 600;
+  }
+  .about-prose .signature-block {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .about-prose .stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--bg);
+    border: 1px solid var(--accent-soft);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .about-prose .stamp::before {
+    content: ""; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .about-prose .stamp.amber {
+    color: #92400E;
+    border-color: #FEF3C7;
+  }
+  .about-prose .stamp.amber::before { background: #B89048; }
+
+  .about ul {
+    list-style: none; padding: 0;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 6px 22px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  }
   .about li {
-    padding: 10px 0; border-bottom: 1px dashed var(--line);
+    padding: 13px 0; border-bottom: 1px dashed var(--line);
     display: flex; justify-content: space-between; font-size: 14px;
   }
   .about li:last-child { border-bottom: 0; }
-  .about li .label { color: var(--muted); }
+  .about li .label {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
   .about li .value { color: var(--ink); font-weight: 500; }
+
+  /* 三 Case 互补矩阵 */
+  .matrix {
+    margin-top: 56px;
+    padding: 36px 40px;
+    background: linear-gradient(180deg, #FAFCFF 0%, #F4F8FD 100%);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    position: relative;
+  }
+  .matrix-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .matrix-head .matrix-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+  }
+  .matrix-head .matrix-title::before {
+    content: "✦";
+    color: #B89048;
+    margin-right: 10px;
+    font-size: 14px;
+  }
+  .matrix-head .matrix-sub {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr 1fr;
+    gap: 0;
+    font-size: 13.5px;
+  }
+  .matrix-grid .row-label {
+    padding: 16px 0;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 1px dashed var(--line);
+    display: flex;
+    align-items: center;
+  }
+  .matrix-grid .col-head {
+    padding: 14px 16px;
+    border-bottom: 2px solid var(--accent);
+    font-weight: 700;
+    color: var(--ink);
+    text-align: center;
+    font-size: 13px;
+  }
+  .matrix-grid .col-head.amber { border-bottom-color: #B89048; }
+  .matrix-grid .col-head.pending {
+    border-bottom-color: var(--muted-2, #94A3B8);
+    color: var(--muted);
+  }
+  .matrix-grid .col-head .num {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--accent);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .matrix-grid .col-head.amber .num { color: #B89048; }
+  .matrix-grid .col-head.pending .num { color: var(--muted-2, #94A3B8); }
+
+  .matrix-grid .cell {
+    padding: 16px;
+    border-bottom: 1px dashed var(--line);
+    color: var(--ink-soft);
+    text-align: center;
+    line-height: 1.5;
+    transition: background 0.15s;
+  }
+  .matrix-grid .cell:hover { background: rgba(255,255,255,0.6); }
+  .matrix-grid .cell strong {
+    display: block;
+    color: var(--ink);
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+  .matrix-grid .row-label.last,
+  .matrix-grid .cell.last { border-bottom: none; }
+  .matrix-grid .col-blue { background: rgba(219, 234, 254, 0.25); }
+  .matrix-grid .col-amber { background: rgba(254, 243, 199, 0.25); }
+  .matrix-grid .col-pending {
+    background: rgba(241, 245, 249, 0.5);
+    opacity: 0.8;
+  }
+
+  .matrix-takeaway {
+    margin-top: 28px;
+    padding: 18px 22px;
+    background: var(--bg);
+    border-left: 3px solid #B89048;
+    border-radius: 8px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .matrix-takeaway strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .matrix-takeaway .key {
+    background: linear-gradient(180deg, transparent 60%, #FCEFC9 60%);
+    padding: 0 2px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  @media (max-width: 720px) {
+    .matrix { padding: 24px 18px; }
+    .matrix-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .matrix-grid .col-head { padding: 12px 8px; font-size: 12px; }
+    .matrix-grid .row-label {
+      padding-top: 18px; padding-bottom: 6px;
+      border-bottom: none;
+      font-size: 10px;
+    }
+    .matrix-grid .cell {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px dashed var(--line);
+    }
+  }
+
+  /* Contact section —— 高级版"打个招呼" */
+  .contact-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: stretch;
+    padding-top: 8px;
+  }
+  .contact-message {
+    position: relative;
+    padding: 8px 0;
+  }
+  .contact-message .greeting {
+    font-family: Georgia, "Songti SC", serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--ink);
+    letter-spacing: 0.2px;
+    margin-bottom: 24px;
+  }
+  .contact-message .greeting em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+    position: relative;
+  }
+  .contact-message .greeting em::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 4px;
+    height: 8px;
+    background: #FCEFC9;
+    z-index: -1;
+    border-radius: 2px;
+  }
+  .contact-message .greeting-sub {
+    font-size: 15px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 460px;
+  }
+  .contact-channels {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 8px 4px;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  }
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line-soft, #F1F5F9);
+    transition: background 0.15s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+  .contact-row:last-child { border-bottom: none; }
+  .contact-row:hover { background: var(--bg-soft); }
+  .contact-row .icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .contact-row.amber .icon {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+  .contact-row .info { flex-grow: 1; min-width: 0; }
+  .contact-row .info .label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .contact-row .info .value {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .contact-row .arrow {
+    color: var(--muted);
+    font-size: 18px;
+    transition: transform 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+  .contact-row:hover .arrow {
+    color: var(--accent);
+    transform: translateX(4px);
+  }
 
   /* Footer */
   footer {
@@ -174,7 +759,7 @@
 
   /* Mobile */
   @media (max-width: 720px) {
-    .hero { padding: 56px 22px 40px; }
+    .hero-inner { padding: 56px 22px 40px; }
     .hero h1 { font-size: 36px; }
     .section { padding: 40px 22px; }
     .cases { grid-template-columns: 1fr; }
@@ -197,95 +782,194 @@
 </nav>
 
 <header class="hero">
-  <h1>用财务数据<br/>驱动<span class="accent">经营决策</span>。</h1>
-  <p class="lead">
-    这里是我作为审计转型财务BP过程中独立完成的分析作品集。
-    所有数据基于公开财报与行业研究，方法论参照成熟期 BP 的
-    Driver Tree / UE 三视角 / Bridge 归因 / 滚动预测 / 敏感性分析。
-  </p>
-  <div class="meta">
-    <span>CICPA</span>
-    <span>会计硕士 · 上海对外经贸大学</span>
-    <span>4年Big4审计 · 金融科技 / 商业银行 / 融资租赁 / 美元基金被投</span>
+  <div class="hero-inner">
+    <h1>用财务数据<br/>驱动<span class="accent">经营决策</span></h1>
+    <p class="lead">
+      这里是我作为审计转型财务BP过程中独立完成的分析作品集。
+      所有数据基于公开财报与行业研究，方法论参照成熟期 BP 的
+      Driver Tree / UE 三视角 / Bridge 归因 / 滚动预测 / 敏感性分析。
+    </p>
+    <div class="meta">
+      <span>CICPA</span>
+      <span>会计硕士 · 上海对外经贸大学</span>
+      <span>4年Big4审计 · 金融科技 / 商业银行 / 融资租赁 / 美元基金被投企业</span>
+    </div>
   </div>
 </header>
 
-<section class="section" id="cases">
-  <div class="section-head">
-    <h2>独立分析 Case</h2>
-    <div class="count">1 已发布 · 1 进行中</div>
-  </div>
+<section class="section-wrapper section-white" id="cases">
+  <div class="section">
+    <div class="section-head">
+      <span class="eyebrow">Selected Work</span>
+      <h2>独立分析 Case</h2>
+      <div class="count">2 已发布 · 1 进行中</div>
+    </div>
 
-  <div class="cases">
+    <div class="cases-scroll">
+    <div class="cases cases-track">
 
-    <article class="case">
-      <span class="tag">已发布 · CASE 01</span>
-      <h3>淘天集团 FY25 BP 分析</h3>
-      <div class="case-meta">阿里巴巴中国电商业务 · 对标PDD主站 / JD零售 · 2026.05</div>
-      <p class="case-summary">
-        以财务BP视角拆解淘天FY25核心命题：CMR增速失速、
-        Take Rate触顶、AAC流失。搭建三层Driver Tree完成
-        +75亿CMR增长归因 Bridge，输出五情景敏感性预测、
-        12项核心监控KPI及量化BP行动建议。
-      </p>
-      <div class="case-tags">
-        <span>Driver Tree</span>
-        <span>UE 三视角</span>
-        <span>P&L Bridge</span>
-        <span>5情景敏感性</span>
-        <span>同业对标</span>
-      </div>
-      <div class="case-cta">
-        <a class="btn btn-primary" href="taotian.html">在线阅读 →</a>
-        <a class="btn btn-ghost" href="downloads/淘天BP分析报告_v2.docx" download>Word</a>
-        <a class="btn btn-ghost" href="downloads/淘天BP分析过程_工作簿_v2.xlsx" download>Excel</a>
-      </div>
-    </article>
+      <article class="case case-blue">
+        <span class="case-number">01</span>
+        <span class="tag">已发布 · CASE 01</span>
+        <h3>淘天集团 FY25 BP 分析</h3>
+        <div class="case-meta">阿里巴巴中国电商业务 · 对标PDD主站 / JD零售 · 2026.05</div>
+        <p class="case-summary">
+          以财务BP视角拆解淘天FY25核心命题：CMR增速失速、
+          Take Rate触顶、AAC流失。搭建三层Driver Tree完成
+          +75亿CMR增长归因 Bridge，输出五情景敏感性预测、
+          12项核心监控KPI及量化BP行动建议。
+        </p>
+        <div class="case-tags">
+          <span>Driver Tree</span>
+          <span>UE 三视角</span>
+          <span>P&L Bridge</span>
+          <span>5情景敏感性</span>
+          <span>同业对标</span>
+        </div>
+        <div class="case-cta">
+          <a class="btn btn-primary" href="taotian.html">在线阅读 →</a>
+          <a class="btn btn-ghost" href="downloads/淘天BP分析报告_v2.docx" download>Word</a>
+          <a class="btn btn-ghost" href="downloads/淘天BP分析过程_工作簿_v2.xlsx" download>Excel</a>
+        </div>
+      </article>
 
-    <article class="case placeholder">
-      <span class="tag" style="background:#FEF3C7;color:#92400E">进行中 · CASE 02</span>
-      <h3>滚动预测 Case（13周现金流）</h3>
-      <div class="case-meta">主题：13周滚动现金流预测 + 偏差归因 · 2026.06 上线</div>
-      <p class="case-summary">
-        基于一家虚构成长期SaaS企业，搭建13周滚动现金流模型、
-        季度滚动预算 vs 实际偏差归因框架、月度经营分析模板。
-        完成后将公开。
-      </p>
-      <div class="case-tags">
-        <span>13周CF</span>
-        <span>滚动预算</span>
-        <span>偏差归因</span>
-      </div>
-      <div class="case-cta">
-        <span style="color:var(--muted);font-size:14px">敬请期待</span>
-      </div>
-    </article>
+      <article class="case case-amber">
+        <span class="case-number">02</span>
+        <span class="tag">已发布 · CASE 02</span>
+        <h3>蜜雪冰城 FY24 滚动预测分析</h3>
+        <div class="case-meta">蜜雪集团（2097.HK）· 招股书数据 · 13周CF + 单店UE + 加盟商盈亏 · 2026.06</div>
+        <p class="case-summary">
+          基于蜜雪冰城港股招股书完整数据，搭建 13 周滚动现金流模型、
+          三档城市单店 UE 压力测试、9M2024 营收 +33亿 P&L Bridge 归因，
+          独家分析加盟商盈亏平衡——验证蜜雪"规模狂奔"模式的可持续性。
+        </p>
+        <div class="case-tags">
+          <span>13周CF</span>
+          <span>单店UE</span>
+          <span>滚动预算偏差</span>
+          <span>加盟商盈亏</span>
+          <span>压力测试</span>
+        </div>
+        <div class="case-cta">
+          <a class="btn btn-primary" href="mixue.html">在线阅读 →</a>
+          <a class="btn btn-ghost" href="downloads/蜜雪冰城BP分析报告.docx" download>Word</a>
+          <a class="btn btn-ghost" href="downloads/蜜雪冰城BP分析过程_工作簿.xlsx" download>Excel</a>
+        </div>
+      </article>
 
+      <article class="case case-pending">
+        <span class="case-number">03</span>
+        <span class="tag">进行中 · CASE 03</span>
+        <h3>理想汽车 · 新车型 NPV 评估</h3>
+        <div class="case-meta">理想汽车（2015.HK / LI.US）· 财报+月度交付数据 · 2026.07 上线</div>
+        <p class="case-summary">
+          以财务 BP 视角评估理想 L 系列与纯电系列的投资回报：
+          搭建分车型 NPV/IRR 模型、产能扩张资本回报测算、
+          MEGA 失败案例的复盘归因，补齐互联网平台 + 连锁餐饮 + 制造业的三角覆盖。
+        </p>
+        <div class="case-tags">
+          <span>NPV / IRR</span>
+          <span>WACC 测算</span>
+          <span>资本回报</span>
+          <span>分车型 P&L</span>
+          <span>投资决策</span>
+        </div>
+        <div class="case-cta">
+          <span class="pending-text">敬请期待</span>
+        </div>
+      </article>
+
+    </div>
+    </div>
+
+    <div class="scroll-hint">
+      <div class="scroll-dots">
+        <span class="active"></span><span class="active"></span><span></span>
+      </div>
+      <span>向右滑动查看 Case 03 <span class="arrow-r">→</span></span>
+    </div>
+
+    <!-- 三 Case 互补矩阵 -->
+    <div class="matrix">
+      <div class="matrix-head">
+        <div class="matrix-title">三案例的互补设计 · How These Cases Connect</div>
+        <div class="matrix-sub">不同行业 / 不同阶段 / 不同方法论 / 不同 BP 工作象限</div>
+      </div>
+
+      <div class="matrix-grid">
+        <!-- 表头 -->
+        <div></div>
+        <div class="col-head"><span class="num">01</span>淘天集团</div>
+        <div class="col-head amber"><span class="num">02</span>蜜雪冰城</div>
+        <div class="col-head pending"><span class="num">03</span>理想汽车</div>
+
+        <!-- 行业 -->
+        <div class="row-label">行业 / Sector</div>
+        <div class="cell col-blue"><strong>互联网平台</strong>轻资产 · 货币化</div>
+        <div class="cell col-amber"><strong>连锁餐饮</strong>加盟 · 强供应链</div>
+        <div class="cell col-pending"><strong>新能源汽车</strong>制造 · 重资产</div>
+
+        <!-- 公司阶段 -->
+        <div class="row-label">阶段 / Stage</div>
+        <div class="cell col-blue"><strong>成熟期</strong>利润奶牛 · 防守</div>
+        <div class="cell col-amber"><strong>扩张期</strong>规模狂奔 · 攻坚</div>
+        <div class="cell col-pending"><strong>转型期</strong>新车型 · 投资</div>
+
+        <!-- BP 工作象限 -->
+        <div class="row-label">BP 象限</div>
+        <div class="cell col-blue"><strong>经营诊断</strong>守利润、优结构</div>
+        <div class="cell col-amber"><strong>滚动管理</strong>控现金、稳生态</div>
+        <div class="cell col-pending"><strong>投资决策</strong>评回报、定方向</div>
+
+        <!-- 核心方法论 -->
+        <div class="row-label last">方法论</div>
+        <div class="cell col-blue last"><strong>Driver Tree · UE</strong>截面归因 · P&amp;L Bridge</div>
+        <div class="cell col-amber last"><strong>13周CF · 单店UE</strong>时序预测 · 偏差归因</div>
+        <div class="cell col-pending last"><strong>NPV · IRR · WACC</strong>资本回报 · 投资分析</div>
+      </div>
+
+      <div class="matrix-takeaway">
+        <strong>为什么是这三个？</strong>
+        我希望财务 BP 的<span class="key">经营、拓展、投资</span>三个工作面向，
+        都能用一个真实公司、一套方法论去打磨——
+        而不是只挑容易做的、或方法相似的案例反复练。
+        每个 Case 都从公开财报与招股书出发，从口径到结论都可追溯。
+        持续在做，也欢迎指正。
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="about" id="about">
+<section class="section-wrapper section-paleblue about" id="about">
   <div class="section">
     <div class="section-head">
+      <span class="eyebrow">About</span>
       <h2>关于我</h2>
-      <div class="count">为什么是我</div>
+      <div class="count">FROM AUDIT TO BP</div>
     </div>
 
     <div class="about-grid">
-      <div>
-        <p>
-          四年安永审计经验，覆盖陆金所（美股/港股）、蚂蚁、建行浙江分行、
-          国耀融汇、上海尚诚、Hello（哈啰）IPO 等项目。在审计实操中
-          深度参与并表判断、利息成本测算、关联方定价、5年盈利预测复核——
-          这些工作的底层方法论与财务BP的预算/滚动预测/Driver Tree 是同构的。
+      <div class="about-prose">
+        <span class="opening-mark">"</span>
+        <p class="pull">
+          从<em>过去发生了什么</em>，<br/>
+          切换到<span class="highlight">下一步该做什么</span>。
         </p>
         <p>
-          我相信"会算账"和"懂业务"之间的距离，不在于知识储备，
-          而在于看待数据的视角。从审计转向 BP，
-          意味着从"过去发生了什么 + 是否合规"
-          切换到"未来要做什么 + 投入产出值不值"。
-          这个作品集就是我练习这种切换的过程。
+          这是我从审计走向财务 BP 的方向。<strong>四年安永审计经验</strong>，覆盖陆金所（美股/港股）、蚂蚁、
+          建行浙江分行、国耀融汇、上海尚诚、Hello（哈啰）IPO 等项目。在审计实操中深度参与
+          <strong>并表判断、利息成本测算、关联方定价、5 年盈利预测复核</strong>——
+          这些工作的底层方法论，与财务 BP 的预算 / 滚动预测 / Driver Tree 是同构的。
         </p>
+        <p>
+          "会算账"和"懂业务"之间的距离，不在于知识储备，而在于看待数据的视角。
+          <strong>这个作品集，是我练习这种切换的过程。</strong>
+        </p>
+        <div class="signature-block">
+          <span class="stamp">CICPA</span>
+          <span class="stamp">4 年 Big4 审计</span>
+          <span class="stamp amber">财务 BP 转型中</span>
+        </div>
       </div>
 
       <ul>
@@ -301,17 +985,75 @@
   </div>
 </section>
 
-<section class="section" id="contact">
-  <div class="section-head">
-    <h2>联系</h2>
-    <div class="count">欢迎递Offer / 内推 / 经验交流</div>
+<section class="section-wrapper section-white" id="contact">
+  <div class="section">
+    <div class="section-head">
+      <span class="eyebrow">Get in Touch</span>
+      <h2>合作 · 内推 · 交流</h2>
+      <div class="count">OPEN TO BP ROLES</div>
+    </div>
+
+    <div class="contact-block">
+      <div class="contact-message">
+        <p class="greeting">
+          如果你也在思考<br/>
+          <em>财务如何驱动经营</em>——<br/>
+          欢迎与我交流。
+        </p>
+        <p class="greeting-sub">
+          目前正在寻找财务 BP / FP&amp;A / 业务分析方向的机会，
+          也欢迎内推、案例交流、方法论讨论。
+        </p>
+      </div>
+
+      <div class="contact-channels">
+        <a class="contact-row" href="mailto:865461746@qq.com">
+          <span class="icon">@</span>
+          <span class="info">
+            <span class="label">Email</span>
+            <span class="value">865461746@qq.com</span>
+          </span>
+          <span class="arrow">→</span>
+        </a>
+        <a class="contact-row amber" href="https://github.com/JennieWang427" target="_blank" rel="noopener">
+          <span class="icon">G</span>
+          <span class="info">
+            <span class="label">GitHub</span>
+            <span class="value">github.com/JennieWang427</span>
+          </span>
+          <span class="arrow">→</span>
+        </a>
+        <div class="contact-row" style="cursor:default">
+          <span class="icon" style="background:#F1F5F9;color:#64748B">·</span>
+          <span class="info">
+            <span class="label">Location</span>
+            <span class="value">上海 · Shanghai</span>
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
-  <ul style="list-style:none;padding:0;font-size:16px;color:var(--ink-soft);">
-    <li style="margin-bottom:12px">📧 <a href="mailto:865461746@qq.com">865461746@qq.com</a></li>
-    <li style="margin-bottom:12px">📱 13472543206</li>
-    <li>🔗 <a href="https://github.com/JennieWang427" target="_blank" rel="noopener">github.com/JennieWang427</a></li>
-  </ul>
 </section>
+
+<script>
+  // 滑动指示器随 case 滚动位置更新
+  (function() {
+    const track = document.querySelector('.cases-track');
+    const dots = document.querySelectorAll('.scroll-dots span');
+    if (!track || !dots.length) return;
+
+    track.addEventListener('scroll', function() {
+      const cardWidth = track.querySelector('.case').offsetWidth + 20;
+      const scrollLeft = track.scrollLeft;
+      // 计算"窗口"中显示的卡片范围
+      const startIdx = Math.round(scrollLeft / cardWidth);
+      // 窗口显示2张 - 起点是哪一张就高亮哪一张+下一张
+      dots.forEach(function(d, i) {
+        d.classList.toggle('active', i === startIdx || i === startIdx + 1);
+      });
+    });
+  })();
+</script>
 
 <footer>
   <div class="footer-inner">

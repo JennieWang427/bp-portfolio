@@ -1,70 +1,54 @@
-# 王静 Jennie · 财务BP作品集 - 部署指引
+# 财务 BP 案例作品集 · Finance BP Case Studies
 
-## 文件结构
+> 一名审计师向财务业务伙伴（Finance Business Partner）转型过程中的独立分析记录。
+> 所有数据来自公开财报与招股书，方法论参照成熟期 BP 的工作框架。
+
+[访问作品集 →](https://jenniewang427.github.io/bp-portfolio/)
+
+---
+
+## 关于这个作品集
+
+这是王静（Jennie Wang）的个人独立分析作品集，目的是把审计经验中积累的财务严谨与可追溯性，
+迁移到财务 BP 工作的视角中——
+从「过去发生了什么、是否合规」切换到「未来要做什么、投入产出值不值」。
+
+每个 Case 都从一家中国上市公司的公开财报或招股书出发，
+覆盖一个特定的 BP 工作面向、一类典型行业、一套核心方法论。
+
+## 案例一览
+
+| # | Case | 行业 | 核心方法论 |
+|:---:|---|---|---|
+| **01** | 淘天集团 FY25 战略诊断 | 互联网平台 · 阿里 9988.HK | Driver Tree 三层穿透 · P&L Bridge · UE 三视角 · 五情景敏感性 |
+| **02** | 蜜雪冰城 FY24 滚动预测 | 连锁餐饮 · 蜜雪 2097.HK | 13 周滚动现金流 · 单店 UE 压力测试 · 滚动预算偏差归因 · 加盟商盈亏平衡 |
+| **03** | 理想汽车 · 新车型 NPV 评估 | 新能源汽车 · 理想 2015.HK | NPV / IRR / WACC · 资本回报测算 · 投资决策分析（**进行中，2026.07 上线**） |
+
+三个案例分别覆盖财务 BP 的 **经营 / 拓展 / 投资** 三大工作象限。
+
+## 数据与口径
+
+- 所有数据均来自公开披露文件——年报、季报、招股书、SEC 与港交所 filing；
+- 每个 Case 配套 Word 报告 + Excel 工作簿，可下载，可复核；
+- 估算数据均标注 `⚠ 估算` 与敏感性区间，与官方披露的 `● 官方` 数据明确区分；
+- Word 报告与 Excel 工作簿数字完全一致；如有不一致以 Excel 为准。
+
+## 目录结构
 
 ```
 bp-portfolio/
-├── index.html              # 作品集首页
-├── taotian.html            # 淘天 case 详情页
-├── downloads/              # 可下载文件
-│   ├── 淘天BP分析报告.docx
-│   └── 淘天BP分析过程_工作簿.xlsx
-└── README.md               # 这份说明
+├── index.html              主页
+├── taotian.html            Case 01 · 淘天集团详情
+├── mixue.html              Case 02 · 蜜雪冰城详情
+└── downloads/              配套 Word 报告 + Excel 工作簿
 ```
 
-## 30 秒部署到 GitHub Pages
+## 联系
 
-### 第一步：创建 GitHub 仓库
-1. 登录 https://github.com
-2. 点击右上角 `+` → `New repository`
-3. 仓库名填 `bp-portfolio`（或任意名字）
-4. 选 `Public`，勾选 `Add a README file`
-5. 点击 `Create repository`
+- Email：[865461746@qq.com](mailto:865461746@qq.com)
+- 详细介绍：[作品集首页](https://jenniewang427.github.io/bp-portfolio/)
 
-### 第二步：上传文件
-**最简单的方式**：网页上传
-1. 进入仓库主页，点击 `Add file` → `Upload files`
-2. 把 `bp-portfolio` 目录里所有文件直接拖进去（包括 `downloads` 文件夹）
-3. 滑到底部，点击 `Commit changes`
+---
 
-### 第三步：开启 Pages
-1. 仓库页面点 `Settings` → 左栏 `Pages`
-2. `Source` 选 `Deploy from a branch`
-3. `Branch` 选 `main`，`/(root)`，点 `Save`
-4. 等 1-2 分钟，刷新页面就会看到 `Your site is live at https://你的用户名.github.io/bp-portfolio/`
-
-### 第四步：拿到链接
-最终链接：`https://你的用户名.github.io/bp-portfolio/`
-淘天 case 直链：`https://你的用户名.github.io/bp-portfolio/taotian.html`
-
-## 简历上怎么放
-
-推荐写法：
-
-```
-➢淘天集团FY25财务BP分析（个人独立Case，2026.05）：搭建Driver Tree三层CMR
-拆解、UE三视角模型、+75亿CMR增长P&L Bridge归因、FY26五情景敏感性分析
-与PDD/JD零售对标，输出12项核心监控KPI及量化BP行动建议；
-完整报告 → https://你的用户名.github.io/bp-portfolio/taotian.html
-```
-
-把链接做成 Word 超链接（Ctrl+K），右下角放一个 2cm 二维码（用任意二维码生成器扫这个链接生成）。
-
-## 后续维护
-
-### 加 Case 2（滚动预测）
-1. 复制 `taotian.html` → 改名 `forecast.html`
-2. 修改其中的内容
-3. 把 `index.html` 里的 "Case 02 进行中" 区块改成正式发布
-4. 重新上传
-
-### 改个人信息
-- 邮箱、电话、GitHub：`index.html` 的 `#contact` 区块
-- 自我介绍：`index.html` 的 `#about` 区块
-
-### 自定义域名（可选）
-如果你买了域名（如 `jennie-bp.com`），在 GitHub 仓库 Settings → Pages → Custom domain 填进去即可。
-
-## 本地预览
-
-直接双击 `index.html` 用浏览器打开就能看到效果。所有样式都内联，无需安装任何工具。
+本作品集所有分析观点仅代表个人，不代表任何机构。
+所有引用数据来自公开来源，详见每份报告附录。

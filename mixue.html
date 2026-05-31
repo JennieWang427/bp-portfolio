@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>蜜雪冰城 FY24 滚动预测分析 · 王静 Jennie</title>
+<meta name="description" content="蜜雪冰城（2097.HK）FY24滚动预测+加盟商盈亏平衡测算：13周现金流模型/单店UE压力测试/季度滚动预算偏差归因。" />
+<style>
+  :root {
+    --ink: #0F172A;
+    --ink-soft: #1E293B;
+    --muted: #64748B;
+    --muted-2: #94A3B8;
+    --line: #E2E8F0;
+    --line-soft: #F1F5F9;
+    --bg: #FFFFFF;
+    --bg-soft: #F8FAFC;
+    --bg-warm: #FAF8F4;
+    --bg-cool: #F4F7FB;
+    --bg-mint: #F4F8F6;
+    --accent: #1E3A8A;
+    --accent-soft: #DBEAFE;
+    --accent-hover: #1E40AF;
+    --amber: #B89048;
+    --amber-soft: #FEF3C7;
+    --pos: #047857;
+    --neg: #B91C1C;
+    --warn: #B45309;
+    --warn-soft: #FEF3C7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+      "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); }
+
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    max-width: 980px; margin: 0 auto; padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand { font-weight: 700; font-size: 16px; }
+  .brand .accent { color: var(--accent); }
+  .nav-back { font-size: 14px; color: var(--muted); }
+  .nav-back:hover { color: var(--accent); }
+
+  /* Hero —— 极淡冷蓝 */
+  .hero-wrap {
+    background: linear-gradient(180deg, var(--bg-cool) 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-wrap::before {
+    content: "";
+    position: absolute;
+    top: -150px; right: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(30, 58, 138, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  /* 蜜雪页面的黄色点缀：tag 用浅黄做标识 */
+  .hero .tag {
+    background: var(--amber-soft);
+    color: #92400E;
+  }
+  .hero { max-width: 980px; margin: 0 auto; padding: 64px 32px 32px; position: relative; }
+  .hero .tag {
+    display: inline-block; font-size: 11px; letter-spacing: 1px;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 5px 12px; border-radius: 999px; font-weight: 600;
+  }
+  .hero h1 { margin-top: 18px; font-size: 44px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.15; }
+  .hero .subtitle { margin-top: 14px; font-size: 18px; color: var(--ink-soft); }
+  .hero .meta {
+    margin-top: 32px; padding: 18px 22px;
+    background: var(--bg); border-left: 3px solid var(--accent);
+    border-radius: 4px; font-size: 14px; color: var(--ink-soft);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+  .hero .meta strong { color: var(--ink); }
+
+  .toc-wrap {
+    background: var(--bg-warm);
+    border-bottom: 1px solid var(--line);
+  }
+  .toc { max-width: 980px; margin: 0 auto; padding: 28px 32px; }
+  .toc-inner {
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 22px 28px; background: var(--bg);
+  }
+  .toc-title { font-size: 12px; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+  .toc-list { columns: 2; column-gap: 32px; list-style: none; }
+  .toc-list li { padding: 4px 0; font-size: 15px; break-inside: avoid; }
+  .toc-list a { color: var(--ink-soft); }
+  .toc-list a:hover { color: var(--accent); }
+  .toc-list .num { display: inline-block; width: 32px; color: var(--muted-2); font-variant-numeric: tabular-nums; }
+
+  .section-wrap { border-bottom: 1px solid var(--line); }
+  .section-wrap:nth-of-type(odd) { background: var(--bg); }
+  .section-wrap:nth-of-type(even) { background: var(--bg-soft); }
+  .section { max-width: 980px; margin: 0 auto; padding: 56px 32px 16px; }
+  .section h2 {
+    font-size: 30px; font-weight: 700; letter-spacing: -0.3px;
+    padding-bottom: 14px; margin-bottom: 32px;
+    position: relative;
+  }
+  .section h2::after {
+    content: ""; position: absolute;
+    left: 0; bottom: 0;
+    width: 48px; height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .section h3 { font-size: 21px; font-weight: 700; margin-top: 36px; margin-bottom: 16px; }
+  .section h3 .num { color: var(--accent); margin-right: 10px; font-variant-numeric: tabular-nums; }
+  .section h4 { font-size: 16px; font-weight: 700; margin-top: 24px; margin-bottom: 10px; color: var(--ink-soft); }
+  .section p { color: var(--ink-soft); margin-bottom: 14px; }
+  .section ul, .section ol { color: var(--ink-soft); margin: 12px 0 16px 22px; }
+  .section li { padding: 4px 0; }
+
+  table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-size: 14px; margin: 16px 0 24px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+  thead th {
+    background: var(--bg-soft); text-align: left;
+    padding: 14px 16px; border-bottom: 1px solid var(--line);
+    font-weight: 600; color: var(--ink-soft); font-size: 12.5px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  tbody td {
+    padding: 12px 16px; border-bottom: 1px solid var(--line-soft);
+    color: var(--ink-soft);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--bg-soft); }
+  td.num, th.num { font-variant-numeric: tabular-nums; text-align: right; }
+  .pos { color: var(--pos); font-weight: 600; }
+  .neg { color: var(--neg); font-weight: 600; }
+  td.muted { color: var(--muted); font-size: 12px; }
+  tr.subtotal td {
+    border-top: 1px solid var(--line);
+    background: var(--bg-soft); font-weight: 600;
+    color: var(--ink);
+  }
+  tr.highlight td { background: #FEF3C7; }
+
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+  .kpi {
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 22px 24px; background: var(--bg);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s ease;
+  }
+  .kpi:hover {
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+  }
+  .kpi .label { font-size: 12px; color: var(--muted); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 10px; }
+  .kpi .value { font-size: 28px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
+  .kpi .delta { margin-top: 8px; font-size: 13px; }
+
+  .callout {
+    background: var(--bg); border-left: 3px solid var(--accent);
+    padding: 18px 22px; border-radius: 8px; margin: 20px 0;
+    font-size: 15px; color: var(--ink-soft);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  }
+  .callout strong { color: var(--ink); }
+  .callout.warn {
+    background: linear-gradient(180deg, #FEFCF3 0%, var(--bg) 100%);
+    border-left-color: #D97706;
+  }
+  .callout.warn strong { color: #92400E; }
+
+  .bridge {
+    margin: 20px 0; font-size: 13px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .bridge-row {
+    display: grid; grid-template-columns: 280px 1fr 90px;
+    align-items: center; padding: 6px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .bridge-row:last-child { border-bottom: 0; }
+  .bridge-label { color: var(--ink-soft); }
+  .bridge-bar { height: 22px; position: relative; }
+  .bridge-bar .fill { position: absolute; height: 100%; border-radius: 3px; }
+  .bridge-bar .fill.pos { background: #34D399; opacity: 0.85; }
+  .bridge-bar .fill.neg { background: #F87171; opacity: 0.85; }
+  .bridge-bar .fill.start, .bridge-bar .fill.end { background: #CBD5E1; }
+  .bridge-value { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 500; }
+
+  .official { color: var(--pos); font-size: 11px; }
+  .estimated { color: var(--warn); font-size: 11px; background: var(--warn-soft); padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
+
+  footer {
+    border-top: 1px solid var(--line); background: var(--bg-soft);
+    margin-top: 16px;
+  }
+  .footer-inner {
+    max-width: 980px; margin: 0 auto; padding: 32px;
+    font-size: 13px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 18px;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 720px) {
+    .hero { padding: 40px 22px 22px; }
+    .hero h1 { font-size: 28px; }
+    .section { padding: 40px 22px 16px; }
+    .toc { padding: 16px 22px; }
+    .toc-list { columns: 1; }
+    .kpis { grid-template-columns: 1fr; }
+    .bridge-row { grid-template-columns: 130px 1fr 64px; font-size: 12px; }
+    table { font-size: 12px; }
+    thead th, tbody td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">王静 <span class="accent">Jennie</span> · 财务BP作品集</div>
+    <a class="nav-back" href="index.html">← 返回作品集</a>
+  </div>
+</nav>
+
+<div class="hero-wrap">
+  <header class="hero">
+    <span class="tag">CASE 02 · 已发布</span>
+    <h1>蜜雪冰城 FY24 滚动预测 + 加盟商盈亏平衡测算</h1>
+    <p class="subtitle">蜜雪集团（2097.HK）· 招股书数据 · 13周现金流模型 + 单店UE压力测试 + 季度滚动预算偏差归因</p>
+
+    <div class="meta">
+      <strong>口径声明 · </strong>本报告以蜜雪冰城招股书（港交所披露易，2025.02.21 发布，2097.HK）为唯一数据源；
+      财务口径 FY21/22/23 完整年 + 9M2024（2024.1.1–2024.9.30）；货币：人民币。<br/>
+      <strong>数据可信度 · </strong><span class="official">●</span> 招股书披露 ·
+      <span class="estimated">⚠ 估算</span> 单店UE/13周CF基于招股书参数推算 ·
+      与 Excel 工作簿"9_口径与假设"完全一致。<br/>
+      <strong>编制 · </strong>王静 Jennie · 2026.06 · 个人独立分析作品（非任何机构观点）
+    </div>
+  </header>
+</div>
+
+<div class="toc-wrap">
+  <div class="toc">
+    <div class="toc-inner">
+      <div class="toc-title">目录</div>
+      <ul class="toc-list">
+        <li><a href="#exec"><span class="num">0</span>核心结论</a></li>
+        <li><a href="#market"><span class="num">1</span>新茶饮行业与市场地位</a></li>
+        <li><a href="#revenue"><span class="num">2</span>业务全景与收入结构</a></li>
+        <li><a href="#cf"><span class="num">3</span>★13周滚动现金流预测</a></li>
+        <li><a href="#ue"><span class="num">4</span>★单店UE模型（三档城市）</a></li>
+        <li><a href="#bridge"><span class="num">5</span>★季度滚动预算偏差归因</a></li>
+        <li><a href="#franchise"><span class="num">6</span>★加盟商盈亏平衡测算</a></li>
+        <li><a href="#sens"><span class="num">7</span>FY26 三情景压力测试</a></li>
+        <li><a href="#diag"><span class="num">8</span>5大问题诊断 + 量化建议</a></li>
+        <li><a href="#kpi"><span class="num">9</span>12项核心监控KPI</a></li>
+        <li><a href="#appendix"><span class="num">10</span>附录：口径与数据源</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="exec">
+  <h2>0. 核心结论</h2>
+
+  <div class="kpis">
+    <div class="kpi">
+      <div class="label">9M2024 营收</div>
+      <div class="value">186.6 <span style="font-size:14px;color:var(--muted);font-weight:400">亿</span></div>
+      <div class="delta pos">YoY +21.2% · 拓店驱动</div>
+    </div>
+    <div class="kpi">
+      <div class="label">9M2024 净利率</div>
+      <div class="value">18.7%</div>
+      <div class="delta pos">YoY +2.8pct · 毛利改善</div>
+    </div>
+    <div class="kpi">
+      <div class="label">门店总数</div>
+      <div class="value">45,302</div>
+      <div class="delta neg">单店日销 4,184元 (YoY -5.3%)</div>
+    </div>
+  </div>
+
+  <h3><span class="num">0.1</span>三大核心发现</h3>
+  <ul>
+    <li><strong>规模狂奔但单店在下行：</strong>门店数从 FY21 20,001 → 9M2024 45,302（+126%），
+    但单店日均GMV从9M2023 4,416元降至 9M2024 4,184元（-5.3%），同店GMV YoY -0.6%。
+    "规模拉抬营收"模式正在面临单店质量稀释。</li>
+    <li><strong>盈利质量结构性改善：</strong>毛利率从 FY22 28.3% 提升至 9M2024 32.4%（+4.1pct），
+    净利率从 14.8% 提升至 18.7%（+3.9pct）。改善来自原料端议价（自有供应链）+ 加盟服务费占比提升（高毛利结构）。</li>
+    <li><strong>加盟模式现金流极强：</strong>9M2024 经营性现金流 51 亿，远超净利 35 亿，
+    自由现金流强劲（基本无重资产 CapEx）——这是连锁加盟模式的盈利质量核心。</li>
+  </ul>
+
+  <h3><span class="num">0.2</span>三大核心隐忧</h3>
+  <ul>
+    <li><strong>加盟商盈利压力（最关键）：</strong>单店日销下行 + 租金/人工刚性 → 加盟商投资回收期从 ~1.5年 延长至 ~2.2年。
+    BP 视角：<strong>加盟商不赚钱，连锁品牌 18 个月内崩盘</strong>。这是首要 KPI。</li>
+    <li><strong>同店GMV负增长信号：</strong>9M2024 同店GMV YoY -0.6%，
+    意味着拓店带来的"虚胖"扣除后，存量店是真负增长。新茶饮赛道已饱和。</li>
+    <li><strong>海外业务仍是 PPT：</strong>海外11国但仅约4,000家店，营收占比 < 5%；
+    与瑞幸/星巴克的海外路径相比，蜜雪供应链优势在海外难以复刻。</li>
+  </ul>
+
+  <h3><span class="num">0.3</span>BP 行动建议（量化版）</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width:22%">行动</th>
+        <th style="width:22%">投入</th>
+        <th style="width:22%">回报</th>
+        <th style="width:12%">回收期</th>
+        <th style="width:22%">关键风险</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>海外拓店：东南亚 +1500 家</strong></td>
+        <td>海外 CapEx +8亿/年<br/>本地运营+品牌 +5亿/年</td>
+        <td>新增 GMV ~25亿<br/>收入 +12亿</td>
+        <td>~2.5年</td>
+        <td>本地化运营难度大；外汇风险</td>
+      </tr>
+      <tr>
+        <td><strong>国内单店日销修复</strong></td>
+        <td>新品研发 +1亿/年<br/>设备升级 +3亿（5年摊销）</td>
+        <td>存量4.5万店 × +5%日销<br/>+30亿GMV / +5亿净利</td>
+        <td>~1.5年</td>
+        <td>新品爆款率仅约20%</td>
+      </tr>
+      <tr>
+        <td><strong>加盟商让利：原料降价 1.5pct</strong></td>
+        <td>毛利率压低 0.5pct<br/>年影响 -3亿</td>
+        <td>关店率↓2pct<br/>保住 ~900 家边缘店</td>
+        <td>—（防御性）</td>
+        <td>毛利率压估值；让利能否传导待验</td>
+      </tr>
+      <tr>
+        <td><strong>幸运咖独立扩张</strong></td>
+        <td>独立品牌建设 +5亿/年<br/>新店 CapEx 随增</td>
+        <td>3年到 6,000家<br/>营收 +10亿</td>
+        <td>~3年</td>
+        <td>瑞幸+库迪格局已成</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>BP 一句话结论 · </strong>
+    蜜雪当前是"规模驱动+加盟商生态"双轮，但<strong>"单店日销下行+加盟商投入回收期延长"是18个月内的核心警讯</strong>。
+    BP 视角的优先级应该是：
+    ① 防守 — 加盟商让利稳生态；
+    ② 修复 — 国内单店日销 +5%；
+    ③ 扩张 — 海外重点国家 +1500 家；
+    ④ 培育 — 幸运咖独立打第二曲线。
+    <strong>不要用海外故事掩盖国内单店问题</strong>，这是新茶饮赛道集体踩过的坑。
+  </div>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="market">
+  <h2>1. 新茶饮行业与市场地位</h2>
+
+  <h3><span class="num">1.1</span>中国新茶饮市场</h3>
+  <p>据 CIC 数据（招股书 P113-134），中国新茶饮零售额 2021–2023 年从 880亿增长至 1,330亿，CAGR ~23%；
+  2023–2026E 预计 CAGR +18.3%，至 2026 年达约 2,200 亿元。
+  渗透率仍在提升期，但行业进入"竞争格局明朗化 + 头部集中"阶段。</p>
+
+  <h3><span class="num">1.2</span>蜜雪在行业中的位置</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>排名维度（2023/2024）</th>
+        <th class="num">蜜雪冰城</th>
+        <th>BP 解读</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>全球门店数（2024.9）<span class="official">●</span></td>
+        <td class="num">45,302（第1）</td>
+        <td>规模无可争议，是星巴克全球店数1.4倍</td>
+      </tr>
+      <tr>
+        <td>中国新茶饮 GMV 份额（2023）<span class="official">●</span></td>
+        <td class="num">11.3%（第1）</td>
+        <td>领先优势但未压倒性，CR4 集中度上升</td>
+      </tr>
+      <tr>
+        <td>全球新茶饮 GMV 份额（2023）</td>
+        <td class="num">2.2%（第4）</td>
+        <td>全球市场蜜雪还远未称王</td>
+      </tr>
+      <tr>
+        <td>全球杯量排名（2023）</td>
+        <td class="num">第2</td>
+        <td>主要差距在客单价（$1 vs 同业$3-5）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>BP 行业判断 · </strong>
+    蜜雪在中国新茶饮的领先来自<strong>极致性价比 + 自有供应链</strong>，
+    不是品牌溢价。这一模式有强大的护城河（下沉市场加盟商粘性），但也有天花板（高客单类目无法做）。
+    BP 真问题：<strong>蜜雪能否在不破坏低价心智的前提下，通过会员/海外/咖啡打开第二曲线？</strong>
+  </div>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="revenue">
+  <h2>2. 业务全景与收入结构</h2>
+
+  <h3><span class="num">2.1</span>商业模式：加盟为本（99% 加盟）</h3>
+  <p>蜜雪 99% 以上门店为加盟店，自营店仅作为模型验证用。
+  收入主要来自<strong>向加盟商销售商品（原料/包材）+ 销售设备 + 加盟及服务费</strong>三块——
+  这是典型的"轻资产 + 强供应链"加盟集团模式（与瑞幸的"自营+联营"模式截然不同）。</p>
+
+  <h3><span class="num">2.2</span>FY21–9M2024 收入分项（招股书 P12 / P16044）</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>科目（亿元）</th>
+        <th class="num">FY21</th>
+        <th class="num">FY22</th>
+        <th class="num">FY23</th>
+        <th class="num">9M2024</th>
+        <th class="num">9M毛利率</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>销售商品（原料/包材）<span class="official">●</span></td>
+        <td class="num">94.6</td><td class="num">125.5</td><td class="num">191.6</td><td class="num">175.95</td>
+        <td class="num pos">31.5%</td>
+      </tr>
+      <tr>
+        <td>销售设备 <span class="official">●</span></td>
+        <td class="num">7.0</td><td class="num">7.5</td><td class="num">7.4</td><td class="num">6.21</td>
+        <td class="num">19.9%</td>
+      </tr>
+      <tr>
+        <td>加盟及服务费 <span class="official">●</span></td>
+        <td class="num">2.0</td><td class="num">2.8</td><td class="num">4.1</td><td class="num">4.43</td>
+        <td class="num pos">82.5%</td>
+      </tr>
+      <tr class="subtotal">
+        <td>合计营收</td>
+        <td class="num">103.5</td><td class="num">135.8</td><td class="num">203.0</td><td class="num">186.60</td>
+        <td class="num">32.4%</td>
+      </tr>
+      <tr>
+        <td>毛利率</td>
+        <td class="num">31.3%</td><td class="num">28.3%</td><td class="num">29.5%</td><td class="num">32.4%</td>
+        <td class="num">+4.1pct</td>
+      </tr>
+      <tr class="highlight">
+        <td><strong>净利率</strong></td>
+        <td class="num"><strong>18.5%</strong></td><td class="num"><strong>14.8%</strong></td><td class="num"><strong>15.7%</strong></td><td class="num"><strong>18.7%</strong></td>
+        <td class="num pos">+3.9pct</td>
+      </tr>
+      <tr>
+        <td>经营性现金流（亿）<span class="official">●</span></td>
+        <td class="num">16.9</td><td class="num">24.3</td><td class="num">37.9</td><td class="num">51.0</td>
+        <td class="num">CFO/Profit 1.46</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>BP 洞察 · </strong>
+    收入结构看似简单，BP视角的两个真信号：
+    ① <strong>加盟服务费占比从 1.9% 提升至 2.4%，毛利率 82.5%</strong> — 这是"轻资产货币化"的进一步深化，与淘天 CMR 占比上升异曲同工；
+    ② <strong>9M2024 经营性 CF / 净利 = 1.46</strong> — 远超制造业典型的 0.8-1.0，说明加盟模式真实回款速度极快（加盟商先打款给蜜雪，再卖给消费者）。
+  </div>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="cf">
+  <h2>3. ★ 13 周滚动现金流预测（FY24 Q4）</h2>
+  <p>BP 周报里最高频的一张表。基于 9M2024 经营性CF 51亿元、季节性（Q4 双 11/双12 弱、春节前补货强）和拓店节奏（每周新增 ~150-200 家店），
+  推算 2024.10.1–12.31 的周度自由现金流。</p>
+  <p style="font-size:13px;color:var(--muted)">起点现金：50亿（9M2024 末估算）；单位：亿元；正数=流入，负数=流出</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>周次</th>
+        <th class="num">收入</th>
+        <th class="num">原料</th>
+        <th class="num">人工</th>
+        <th class="num">CapEx</th>
+        <th class="num">税务</th>
+        <th class="num">其他</th>
+        <th class="num">周净CF</th>
+        <th class="num">期末现金</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>W1 (10/07)</td><td class="num">7.2</td><td class="num neg">-3.8</td><td class="num neg">-0.6</td><td class="num neg">-0.4</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+2.1</td><td class="num">52.1</td></tr>
+      <tr><td>W2 (10/14)</td><td class="num">7.0</td><td class="num neg">-3.6</td><td class="num neg">-0.6</td><td class="num neg">-0.5</td><td class="num neg">-0.8</td><td class="num neg">-0.3</td><td class="num pos">+1.2</td><td class="num">53.3</td></tr>
+      <tr><td>W3 (10/21)</td><td class="num">7.3</td><td class="num neg">-3.7</td><td class="num neg">-0.6</td><td class="num neg">-0.5</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+2.2</td><td class="num">55.5</td></tr>
+      <tr><td>W4 (10/28)</td><td class="num">7.4</td><td class="num neg">-3.8</td><td class="num neg">-0.6</td><td class="num neg">-0.6</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+2.1</td><td class="num">57.6</td></tr>
+      <tr style="background:#FEF3C7"><td><strong>W5 (11/04)</strong></td><td class="num">7.5</td><td class="num neg">-4.0</td><td class="num neg">-0.6</td><td class="num neg">-0.6</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+2.0</td><td class="num"><strong>59.6</strong></td></tr>
+      <tr><td>W6 (11/11) 双11</td><td class="num">7.8</td><td class="num neg">-4.2</td><td class="num neg">-0.6</td><td class="num neg">-0.6</td><td class="num neg">-0.8</td><td class="num neg">-0.3</td><td class="num pos">+1.3</td><td class="num">60.9</td></tr>
+      <tr><td>W7 (11/18)</td><td class="num">7.6</td><td class="num neg">-4.0</td><td class="num neg">-0.6</td><td class="num neg">-0.7</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+2.0</td><td class="num">62.9</td></tr>
+      <tr><td>W8 (11/25)</td><td class="num">7.4</td><td class="num neg">-3.8</td><td class="num neg">-0.6</td><td class="num neg">-0.7</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+2.0</td><td class="num">64.9</td></tr>
+      <tr><td>W9 (12/02)</td><td class="num">7.2</td><td class="num neg">-3.6</td><td class="num neg">-0.6</td><td class="num neg">-0.7</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+2.0</td><td class="num">66.9</td></tr>
+      <tr><td>W10 (12/09)</td><td class="num">6.8</td><td class="num neg">-3.4</td><td class="num neg">-0.6</td><td class="num neg">-0.5</td><td class="num neg">-0.8</td><td class="num neg">-0.3</td><td class="num pos">+1.2</td><td class="num">68.1</td></tr>
+      <tr><td>W11 (12/16)</td><td class="num">6.5</td><td class="num neg">-3.2</td><td class="num neg">-0.7</td><td class="num neg">-0.4</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+1.9</td><td class="num">70.0</td></tr>
+      <tr><td>W12 (12/23)</td><td class="num">6.3</td><td class="num neg">-3.1</td><td class="num neg">-0.8</td><td class="num neg">-0.3</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+1.8</td><td class="num">71.8</td></tr>
+      <tr><td>W13 (12/30)</td><td class="num">6.0</td><td class="num neg">-3.0</td><td class="num neg">-0.7</td><td class="num neg">-0.3</td><td class="num">0</td><td class="num neg">-0.3</td><td class="num pos">+1.7</td><td class="num">73.5</td></tr>
+      <tr class="subtotal"><td><strong>13周合计</strong></td><td class="num"><strong>92.0</strong></td><td class="num neg"><strong>-47.2</strong></td><td class="num neg"><strong>-8.2</strong></td><td class="num neg"><strong>-6.8</strong></td><td class="num neg"><strong>-2.4</strong></td><td class="num neg"><strong>-3.9</strong></td><td class="num pos"><strong>+23.5</strong></td><td class="num"><strong>73.5</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>BP 监控点 · </strong>
+    13周累计自由现金流 +23.5亿，期末现金 73.5亿，<strong>无短期流动性风险</strong>。
+    BP 应特别监控的三周：
+    <strong>W2/W6/W10（季度税缴）</strong>——单周净CF 仅 +1.2-1.3亿，对应日均 ~0.2亿，
+    若该周遭遇原料价大涨 5%，会瞬间变负。这是"看似安全实则脆弱"的典型。
+    建议管理层维持 ≥40亿 的"现金安全垫"。
+  </div>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="ue">
+  <h2>4. ★ 单店 UE 模型（三档城市）</h2>
+  <p>BP 视角看连锁加盟生态，<strong>必须算到单店级</strong>。基于招股书披露的"新店设备投入 6.85万元"+ 行业租金/人工数据，构建三档城市单店年化 P&L。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>科目（元/年）</th>
+        <th class="num">一线城市</th>
+        <th class="num">二线城市</th>
+        <th class="num">下沉市场</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>日均杯数 <span class="estimated">⚠</span></td><td class="num">380</td><td class="num">350</td><td class="num">300</td></tr>
+      <tr><td>单杯均价</td><td class="num">8.0</td><td class="num">7.5</td><td class="num">6.5</td></tr>
+      <tr><td>日均 GMV</td><td class="num">3,040</td><td class="num">2,625</td><td class="num">1,950</td></tr>
+      <tr class="subtotal"><td>年 GMV</td><td class="num">1,109,600</td><td class="num">958,125</td><td class="num">711,750</td></tr>
+      <tr><td>− 年租金</td><td class="num neg">-216,000</td><td class="num neg">-120,000</td><td class="num neg">-60,000</td></tr>
+      <tr><td>− 年人工</td><td class="num neg">-300,000</td><td class="num neg">-216,000</td><td class="num neg">-144,000</td></tr>
+      <tr><td>− 年原料（≈50%销）</td><td class="num neg">-554,800</td><td class="num neg">-479,063</td><td class="num neg">-355,875</td></tr>
+      <tr><td>− 加盟金及管理费（年）</td><td class="num neg">-30,000</td><td class="num neg">-25,000</td><td class="num neg">-20,000</td></tr>
+      <tr><td>− 其他费用（水电/物料）</td><td class="num neg">-60,000</td><td class="num neg">-50,000</td><td class="num neg">-40,000</td></tr>
+      <tr class="highlight"><td><strong>加盟商年净利</strong></td><td class="num"><strong>-51,200</strong></td><td class="num"><strong>+68,062</strong></td><td class="num"><strong>+91,875</strong></td></tr>
+      <tr><td>初始投入（含设备/装修/加盟金）</td><td class="num">350,000</td><td class="num">280,000</td><td class="num">220,000</td></tr>
+      <tr><td><strong>投资回收期（年）</strong></td><td class="num neg"><strong>亏损</strong></td><td class="num"><strong>4.1</strong></td><td class="num pos"><strong>2.4</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>核心发现（独家分析）· </strong>
+    一线城市单店 UE 已经<strong>扛不住租金</strong>——这就是为什么蜜雪几乎不在北京/上海开店。
+    二线城市回收期已延长至 4.1 年（FY21 行业平均 2-2.5 年）。
+    <strong>下沉市场仍是蜜雪盈利核心，回收期 2.4 年</strong>，但若日销再降 10%（基准情景），下沉市场回收期也将拉长至 3.5 年——
+    这是"加盟商崩盘临界线"。
+  </div>
+
+  <h3><span class="num">4.1</span>压力测试：日销下行情景下加盟商回收期</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>情景</th>
+        <th class="num">一线回收期</th>
+        <th class="num">二线回收期</th>
+        <th class="num">下沉回收期</th>
+        <th>BP 判断</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>基准</td><td class="num neg">亏损</td><td class="num">4.1</td><td class="num">2.4</td><td>下沉撑全局</td></tr>
+      <tr style="background:#FEE2E2"><td><strong>日销 -10%</strong></td><td class="num neg">亏损</td><td class="num neg">7.5</td><td class="num">3.5</td><td>二线临界，下沉拉长</td></tr>
+      <tr style="background:#FEE2E2"><td><strong>日销 -10% + 原料 +5%</strong></td><td class="num neg">亏损</td><td class="num neg">15+</td><td class="num neg">5.8</td><td>全线崩盘</td></tr>
+      <tr style="background:#D1FAE5"><td>原料降价让利 1.5%（蜜雪行动）</td><td class="num">12+</td><td class="num">3.5</td><td class="num">2.0</td><td>关键防御性投入</td></tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="bridge">
+  <h2>5. ★ 9M2024 营收增长 P&L Bridge</h2>
+  <p>把 9M2024 营收同比 +33.3 亿元（186.6 vs 153.9）的变动逐项归因到"拓店、单店日销、客单价、结构"四个维度。
+  目标：归因误差 ≤ 5%。</p>
+
+  <div class="bridge">
+    <div class="bridge-row">
+      <div class="bridge-label"><strong>9M2023 营收锚点</strong></div>
+      <div class="bridge-bar"><div class="fill start" style="left:0;width:75%"></div></div>
+      <div class="bridge-value">153.9</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">+ 拓店：门店数 36,153 → 45,302 (+25%)</div>
+      <div class="bridge-bar"><div class="fill pos" style="left:75%;width:18%"></div></div>
+      <div class="bridge-value pos">+47.5</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">- 单店日销：4,416 → 4,184 (-5.3%)</div>
+      <div class="bridge-bar"><div class="fill neg" style="left:71%;width:4%"></div></div>
+      <div class="bridge-value neg">-10.2</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">- 客单价：11.7 → 11.4 (-2.6%)</div>
+      <div class="bridge-bar"><div class="fill neg" style="left:74%;width:1%"></div></div>
+      <div class="bridge-value neg">-2.4</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label">+ 加盟服务费占比 1.8% → 2.4%</div>
+      <div class="bridge-bar"><div class="fill pos" style="left:75%;width:0.6%"></div></div>
+      <div class="bridge-value pos">+1.6</div>
+    </div>
+    <div class="bridge-row">
+      <div class="bridge-label"><strong>9M2024 营收实际</strong></div>
+      <div class="bridge-bar"><div class="fill end" style="left:0;width:91%"></div></div>
+      <div class="bridge-value">186.6</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>维度</th><th>计算逻辑</th><th class="num">影响（亿）</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>拓店</td><td>新增 9,149 家 × 单店年营收 0.45亿 ÷ (12/9 摊销系数)</td><td class="num pos">+47.5</td></tr>
+      <tr><td>单店日销</td><td>(4,184 - 4,416) × 9.5 万家平均门店 × 270 天 ÷ 1亿</td><td class="num neg">-10.2</td></tr>
+      <tr><td>客单价</td><td>(11.4 - 11.7) × 39 亿订单 ÷ 1亿</td><td class="num neg">-2.4</td></tr>
+      <tr><td>结构（加盟服务费）</td><td>(2.4% - 1.8%) × 186.6亿 × 9.5</td><td class="num pos">+1.6</td></tr>
+      <tr class="subtotal"><td>归因合计</td><td>—</td><td class="num"><strong>+36.5</strong></td></tr>
+      <tr><td class="muted">实际变动</td><td class="muted">186.6 - 153.9</td><td class="num muted">+32.7</td></tr>
+      <tr><td class="muted">归因误差</td><td class="muted">|36.5-32.7|/32.7</td><td class="num muted">11.6%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>归因误差解读 · </strong>
+    11.6% 略高于目标 5%，主要差异来自"加盟商存量店和新增店的单店日销结构性差异未单独建模"。
+    实务中 BP 会进一步把"拓店"拆为"新店爬坡贡献 + 存量店全年化贡献"两层；本报告为简化保留四维。
+    <strong>关键洞察：拓店贡献 +47.5亿正好被 GMV/客单价拖累 -12.6亿对冲了 26%</strong>——
+    意味着如果 FY25 拓店速度从 +25% 降至 +10%（饱和信号），同店再不修复，营收增速会从 +21% 跌至 +5%。
+  </div>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="franchise">
+  <h2>6. ★ 加盟商盈亏平衡测算（独家分析）</h2>
+  <p>这是 Case 1（淘天）所没有的视角——<strong>"BP 不只是看公司的报表，更要看加盟商的报表"</strong>。
+  加盟商不赚钱，连锁品牌 18 个月内崩盘。这是新茶饮、便利店、健身房、教培行业反复验证过的规律。</p>
+
+  <h3><span class="num">6.1</span>不同租金下的盈亏平衡日销</h3>
+  <p>以二线城市为例，不同月租金水平下，加盟商需要的最低日销才能盈亏平衡。</p>
+  <table>
+    <thead>
+      <tr><th class="num">月租金（元）</th><th class="num">盈亏平衡日销</th><th class="num">需日均杯数</th><th>判断</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">5,000</td><td class="num">1,950</td><td class="num">260</td><td class="pos">下沉市场标配</td></tr>
+      <tr><td class="num">8,000</td><td class="num">2,200</td><td class="num">293</td><td>下沉强店</td></tr>
+      <tr><td class="num">12,000</td><td class="num">2,650</td><td class="num">353</td><td>二线市场底线</td></tr>
+      <tr style="background:#FEF3C7"><td class="num">15,000</td><td class="num">2,950</td><td class="num">393</td><td>二线市场吃力</td></tr>
+      <tr style="background:#FEE2E2"><td class="num">20,000</td><td class="num">3,400</td><td class="num">453</td><td class="neg">二线警戒线</td></tr>
+      <tr style="background:#FEE2E2"><td class="num">30,000+</td><td class="num">4,200+</td><td class="num">560+</td><td class="neg">一线难做</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">6.2</span>BP 视角的关键决策矩阵</h3>
+  <ul>
+    <li><strong>拓店审批红线</strong>：月租 ≥ 月销售额 8% 的店一律不批（蜜雪当前内部 KPI ~6%）</li>
+    <li><strong>关店预警机制</strong>：连续3个月日销 < 盈亏平衡 80%，总部主动介入</li>
+    <li><strong>区域差异定价</strong>：一线/二线/下沉应该有不同的供货价（让利下沉市场）</li>
+  </ul>
+
+  <div class="callout">
+    <strong>这一章为什么是 BP 的核心工作 · </strong>
+    单店 UE 是连锁餐饮 BP 每周都在做的事。淘天 BP 看 Take Rate，蜜雪 BP 看"加盟商月营收除以租金"——
+    数学结构不同但本质都是<strong>"业务增长是否健康"的微观度量</strong>。
+    建议结论被采纳后落地：每月 BP Pack 增加"加盟商盈利分布图"，监控亏损店占比的演变。
+  </div>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="sens">
+  <h2>7. FY26 三情景压力测试</h2>
+  <p>关键变量三个：店数 YoY、单店日销 YoY、毛利率。基准基于 FY24 全年延续 9M2024 趋势小幅放缓。</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>情景</th>
+        <th class="num">店数 YoY</th>
+        <th class="num">单店日销 YoY</th>
+        <th class="num">毛利率</th>
+        <th class="num">营收（亿）</th>
+        <th class="num">净利率</th>
+        <th class="num">净利（亿）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#FEE2E2"><td><strong>压力</strong></td><td class="num">+5%</td><td class="num">-10%</td><td class="num">30.0%</td><td class="num">230</td><td class="num">14.0%</td><td class="num">32.2</td></tr>
+      <tr style="background:#DBEAFE"><td><strong>基准</strong></td><td class="num">+15%</td><td class="num">-3%</td><td class="num">32.0%</td><td class="num"><strong>305</strong></td><td class="num">17.0%</td><td class="num">51.9</td></tr>
+      <tr style="background:#D1FAE5"><td><strong>乐观</strong></td><td class="num">+20%</td><td class="num">+2%</td><td class="num">33.0%</td><td class="num">360</td><td class="num">19.0%</td><td class="num">68.4</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">7.1</span>弹性矩阵</h3>
+  <table>
+    <thead>
+      <tr><th>变量</th><th class="num">+1pct 对营收影响（亿）</th><th class="num">% of FY25 营收</th><th>BP 监控权重</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>店数 YoY +1pct</td><td class="num pos">+2.0</td><td class="num">+0.8%</td><td>中</td></tr>
+      <tr><td>单店日销 YoY +1pct</td><td class="num pos">+2.5</td><td class="num">+1.0%</td><td>极高（最敏感）</td></tr>
+      <tr><td>毛利率 +1pct</td><td class="num pos">+2.5</td><td class="num">+1.0%</td><td>高</td></tr>
+      <tr><td>原料采购价 -1pct</td><td class="num pos">+1.2</td><td class="num">+0.5%</td><td>高</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>BP 预算锚定建议 · </strong>
+    管理层 FY26 指引应以基准情景为 KPI（营收 ~305亿、净利率 17%），
+    同时准备压力情景（净利仅32亿）的 Plan B：
+    <strong>立刻启动加盟商让利预案、控制拓店节奏在 +10% 以下、加大原料对冲</strong>。
+  </div>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="diag">
+  <h2>8. 5大问题诊断 + 量化建议</h2>
+  <table>
+    <thead>
+      <tr><th style="width:14%">问题</th><th style="width:18%">量化影响</th><th style="width:20%">根因</th><th style="width:24%">改进路径</th><th style="width:24%">量化潜力 / 风险</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>① 单店日销下行</strong></td>
+        <td>9M2024 4,184元 vs 9M2023 4,416元（-5.3%）</td>
+        <td>新茶饮赛道竞争白热化 + 消费降级</td>
+        <td>新品高频迭代 + 88VIP 式会员体系 + 区域差异化</td>
+        <td>+5% 日销 ≈ +15亿营收；风险：新品成功率仅 20%</td>
+      </tr>
+      <tr>
+        <td><strong>② 海外扩张过慢</strong></td>
+        <td>11 国仅 ~4,000 家店，营收占比 < 5%</td>
+        <td>本地化供应链未建</td>
+        <td>印尼/越南建本地工厂</td>
+        <td>3 年达 1万店、海外营收 30亿；风险：文化适配</td>
+      </tr>
+      <tr>
+        <td><strong>③ 幸运咖品牌弱</strong></td>
+        <td>~4,000 家 vs 瑞幸 20,000 家</td>
+        <td>蜜雪品牌定位与咖啡品质冲突</td>
+        <td>独立运营 + 独立资本市场故事</td>
+        <td>3 年到 6,000 家 ≈ +10亿；风险：瑞幸/库迪挤压</td>
+      </tr>
+      <tr>
+        <td><strong>④ 加盟商盈利压力（最关键）</strong></td>
+        <td>回收期从 1.5 年延长至 2.2 年</td>
+        <td>租金/人工刚性 + 单店日销下行</td>
+        <td>原料让利 + 数字化降本工具 + 关店补贴</td>
+        <td>保住底层加盟商生态；风险：毛利率被压</td>
+      </tr>
+      <tr>
+        <td><strong>⑤ 原料成本波动</strong></td>
+        <td>原料占比 ~50%，1.5pct 波动 = 净利 -15%</td>
+        <td>天气/进口政策/大宗商品</td>
+        <td>自有种植基地 + 多产地 + 期货套保</td>
+        <td>降低成本波动 10pct；风险：套保操作失误</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="kpi">
+  <h2>9. 12 项核心监控 KPI（连锁餐饮版）</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>KPI</th><th>口径</th><th class="num">目标值</th><th class="num">预警阈值</th><th>负责部门</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>门店净增数</td><td>月度</td><td class="num">+800/月</td><td class="num">&lt;+500/月</td><td>拓店 BD</td></tr>
+      <tr><td>2</td><td>新店爬坡曲线</td><td>开业 6 月日销</td><td class="num">≥3,500元</td><td class="num">&lt;3,000元</td><td>运营</td></tr>
+      <tr><td>3</td><td>同店 GMV YoY</td><td>滚动 12 月</td><td class="num">+0%~+3%</td><td class="num">&lt;-3%</td><td>运营+市场</td></tr>
+      <tr style="background:#FEF3C7"><td>4</td><td><strong>加盟商关店率</strong></td><td>TTM</td><td class="num">&lt;3%</td><td class="num">&gt;5%</td><td>BD+品控</td></tr>
+      <tr style="background:#FEF3C7"><td>5</td><td><strong>单店日均 GMV</strong></td><td>月度</td><td class="num">≥4,200元</td><td class="num">&lt;3,800元</td><td>运营</td></tr>
+      <tr><td>6</td><td>毛利率</td><td>季度</td><td class="num">≥31%</td><td class="num">&lt;29%</td><td>供应链</td></tr>
+      <tr><td>7</td><td>原料 CR3 集中度</td><td>季度</td><td class="num">&lt;60%</td><td class="num">&gt;70%</td><td>采购</td></tr>
+      <tr><td>8</td><td>库存周转天数</td><td>月度</td><td class="num">≤25 天</td><td class="num">&gt;35 天</td><td>供应链</td></tr>
+      <tr><td>9</td><td>净利率</td><td>季度</td><td class="num">≥17%</td><td class="num">&lt;14%</td><td>CFO+BP</td></tr>
+      <tr><td>10</td><td>经营性现金流</td><td>季度披露</td><td class="num">&gt;15亿/季</td><td class="num">&lt;10亿</td><td>财务部</td></tr>
+      <tr><td>11</td><td>海外 GMV 占比</td><td>季度</td><td class="num">+1pct/年</td><td class="num">&lt;+0.5pct</td><td>海外 BU</td></tr>
+      <tr><td>12</td><td>加盟商 NPS</td><td>半年</td><td class="num">≥45</td><td class="num">&lt;35</td><td>BD</td></tr>
+    </tbody>
+  </table>
+
+  <h4>BP 行动节奏（连锁餐饮特化版）</h4>
+  <ul>
+    <li><strong>每周</strong>：13 周滚动现金流刷新；新店爬坡 vs 标准曲线偏差报警</li>
+    <li><strong>每月</strong>：5 KPI 预警机制（同店 GMV、加盟商关店率、单店日销、毛利率、CFO），异常项 24h 内归因</li>
+    <li><strong>每季度</strong>：滚动预算 vs 实际偏差 4 维归因（拓店/日销/客单价/结构）</li>
+    <li><strong>每半年</strong>：单店 UE 模型刷新，三档城市加盟商盈亏平衡测算</li>
+  </ul>
+</section>
+</div>
+
+<div class="section-wrap">
+<section class="section" id="appendix">
+  <h2>10. 附录：口径与数据源</h2>
+
+  <h3><span class="num">A.</span>口径声明</h3>
+  <table>
+    <thead><tr><th>类别</th><th>口径/假设</th><th>依据</th></tr></thead>
+    <tbody>
+      <tr><td>财年口径</td><td>FY21/22/23 完整年 + 9M2024</td><td>蜜雪冰城 H 股招股书 P15-20</td></tr>
+      <tr><td>会计准则</td><td>IFRS</td><td>港股上市标准</td></tr>
+      <tr><td>货币</td><td>人民币元</td><td>所有金额若无特别说明均为 RMB</td></tr>
+      <tr><td>门店数 ●</td><td>含中国+海外 11 国，含自营+加盟</td><td>9M2024 末 45,302 家</td></tr>
+      <tr><td>GMV ●</td><td>含全部门店实际成交额（消费者支付）</td><td>非蜜雪集团收入</td></tr>
+      <tr><td>蜜雪集团营收 ●</td><td>向加盟商销售商品/设备 + 加盟服务费</td><td>不等于 GMV</td></tr>
+      <tr><td>单店 UE ⚠</td><td>租金/人工基于行业研究估算</td><td>招股书未直接披露加盟商成本结构</td></tr>
+      <tr><td>13周CF ⚠</td><td>季节性按 9M2024 经营性CF/39周拆分</td><td>双11/双12 弱、春节前补货强</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">B.</span>数据源</h3>
+  <table>
+    <thead><tr><th>类别</th><th>来源</th><th>查找路径</th></tr></thead>
+    <tbody>
+      <tr><td>蜜雪招股书</td><td><a href="https://www1.hkexnews.hk/" target="_blank">港交所披露易（2097.HK）</a></td><td>2025.02.21 全球发售文件</td></tr>
+      <tr><td>蜜雪 IR</td><td><a href="https://ir.mxbc.com" target="_blank">蜜雪 IR 官网</a></td><td>财务报告 / 公告披露</td></tr>
+      <tr><td>新茶饮行业</td><td>CIC 灼识咨询</td><td>招股书"行业概览"P113-134</td></tr>
+      <tr><td>同业对标</td><td>古茗（1364.HK）/ 茶百道（2555.HK）招股书</td><td>港交所披露易</td></tr>
+      <tr><td>第三方研究</td><td>中金/高盛/中信新茶饮深度报告</td><td>慧博投研 / 远瞻智库</td></tr>
+    </tbody>
+  </table>
+
+  <h3><span class="num">C.</span>配套 Excel 工作簿</h3>
+  <p>完整中间过程、13 周 CF 周度公式、单店 UE 三档敏感性模型请见配套 Excel 文件：
+  <a href="downloads/蜜雪冰城BP分析过程_工作簿.xlsx" download><strong>蜜雪冰城BP分析过程_工作簿.xlsx</strong></a>，
+  包含 11 个工作表（行业市场、收入结构、13周CF、单店UE、滚动预算偏差、加盟商盈亏、敏感性、问题诊断、KPI、口径、数据源）。</p>
+</section>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 王静 Jennie · 财务BP作品集 · 本报告所有数据基于公开招股书整理</div>
+    <div><a href="index.html">← 返回作品集</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
