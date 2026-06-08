@@ -41,8 +41,8 @@ bp-portfolio/
 ├── taotian.html            Case 01 · 淘天集团详情
 ├── mixue.html              Case 02 · 蜜雪冰城详情
 └── Reports/
-    ├── Taotian_BP_Report_v3.docx        Case 01 · 完整 BP 分析报告
-    ├── Taotian_BP_Workbook_v3.xlsx      Case 01 · Excel 工作簿（11 sheet 含公式联动）
+    ├── 淘天BP分析报告_v3.docx        Case 01 · 完整 BP 分析报告
+    ├── 淘天BP分析过程_工作簿_v3.xlsx      Case 01 · Excel 工作簿（11 sheet 含公式联动）
     ├── 蜜雪冰城BP分析报告.docx           Case 02 · 完整 BP 分析报告
     └── 蜜雪冰城BP分析过程_工作簿.xlsx     Case 02 · Excel 工作簿
 ```
