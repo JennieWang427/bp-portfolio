@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+<meta name="theme-color" content="#FFFFFF" />
 <title>王静 Jennie · 财务BP作品集</title>
 <meta name="description" content="王静 Jennie · 财务BP独立分析作品集。Driver Tree、UE模型、滚动预测、敏感性分析。" />
 <style>
@@ -757,14 +758,128 @@
     font-size: 13px; color: var(--muted);
   }
 
-  /* Mobile */
+  /* ============ 移动端综合适配 ============ */
   @media (max-width: 720px) {
-    .hero-inner { padding: 56px 22px 40px; }
-    .hero h1 { font-size: 36px; }
-    .section { padding: 40px 22px; }
-    .cases { grid-template-columns: 1fr; }
+    body { font-size: 15px; }
+
+    /* Nav */
+    .nav-inner { padding: 14px 18px; gap: 8px; }
+    .brand { font-size: 13px; }
+    .nav-links a { margin-left: 14px; font-size: 13px; }
+
+    /* Hero */
+    .hero-inner { padding: 48px 20px 36px; }
+    .hero h1 { font-size: 30px; line-height: 1.2; }
+    .hero .lead { font-size: 16px; margin-top: 20px; line-height: 1.7; }
+    .hero .meta { gap: 14px; margin-top: 24px; font-size: 13px; }
+    .hero .meta span::before { width: 5px; height: 5px; margin-right: 8px; }
+
+    /* Section padding */
+    .section { padding: 48px 20px; }
+    .section-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .section-head h2 { font-size: 22px; }
+    .section-head .eyebrow { font-size: 12px; }
+    .section-head .count { font-size: 11px; }
+
+    /* Cases - 横向滑动卡片在移动端表现 */
+    .cases-track .case {
+      flex: 0 0 86%;
+      min-width: 0;
+      padding: 22px 20px;
+    }
+    .case h3 { font-size: 18px; max-width: 80%; }
+    .case .case-meta { font-size: 12px; line-height: 1.6; }
+    .case .case-summary { font-size: 14px; line-height: 1.7; margin-top: 14px; }
+    .case .case-tags span { font-size: 11px; padding: 3px 8px; }
+    .case .case-number { font-size: 42px; top: 18px; right: 22px; }
+    .case .case-cta {
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+      padding-top: 16px;
+    }
+    .btn { padding: 9px 14px; font-size: 13px; }
+
+    .scroll-hint { font-size: 11px; gap: 8px; margin-top: 16px; }
+
+    /* 互补矩阵 - 移动端单列 */
+    .matrix { padding: 24px 18px; margin-top: 36px; }
+    .matrix-head { flex-direction: column; align-items: flex-start; }
+    .matrix-head .matrix-title { font-size: 14px; }
+    .matrix-head .matrix-sub { font-size: 12px; line-height: 1.65; }
+    .matrix-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .matrix-grid .row-label {
+      padding: 18px 0 6px;
+      border-bottom: none;
+      font-size: 10px;
+      color: var(--accent);
+    }
+    .matrix-grid .col-head {
+      padding: 12px 14px;
+      font-size: 12px;
+      text-align: left;
+    }
+    .matrix-grid .col-head .num { font-size: 18px; }
+    .matrix-grid .cell {
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 13px;
+      border-bottom: 1px dashed var(--line);
+    }
+    .matrix-grid .cell strong { font-size: 13px; }
+    .matrix-takeaway { padding: 14px 16px; font-size: 13.5px; line-height: 1.7; margin-top: 20px; }
+
+    /* About */
     .about-grid { grid-template-columns: 1fr; gap: 32px; }
-    .nav-links a { margin-left: 16px; }
+    .about-prose .opening-mark { font-size: 64px; margin-left: -4px; }
+    .about-prose .pull {
+      font-size: 22px;
+      padding-left: 18px;
+      border-left-width: 2px;
+      line-height: 1.5;
+    }
+    .about-prose p { font-size: 15px; line-height: 1.8; }
+    .about-prose .signature-block { gap: 8px; margin-top: 24px; }
+    .about-prose .stamp { font-size: 11px; padding: 5px 11px; }
+    .about ul { padding: 4px 18px; }
+    .about li { padding: 11px 0; font-size: 13px; }
+    .about li .label { font-size: 10px; letter-spacing: 1px; }
+
+    /* Contact */
+    .contact-block { grid-template-columns: 1fr; gap: 32px; }
+    .contact-message .greeting { font-size: 26px; line-height: 1.4; }
+    .contact-message .greeting-sub { font-size: 14px; line-height: 1.7; }
+    .contact-row { padding: 14px 16px; gap: 14px; }
+    .contact-row .icon { width: 36px; height: 36px; font-size: 14px; }
+    .contact-row .info .label { font-size: 10px; letter-spacing: 1px; }
+    .contact-row .info .value { font-size: 14px; }
+
+    /* Footer */
+    .footer-inner {
+      flex-direction: column;
+      gap: 8px;
+      padding: 20px;
+      font-size: 12px;
+      text-align: left;
+    }
+  }
+
+  /* 超小屏 (< 380px) */
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 26px; }
+    .section-head h2 { font-size: 19px; }
+    .case h3 { font-size: 16px; }
+    .case .case-number { font-size: 36px; }
+    .about-prose .pull { font-size: 19px; }
+    .contact-message .greeting { font-size: 22px; }
   }
 </style>
 </head>
@@ -828,8 +943,8 @@
         </div>
         <div class="case-cta">
           <a class="btn btn-primary" href="taotian.html">在线阅读 →</a>
-          <a class="btn btn-ghost" href="downloads/淘天BP分析报告_v2.docx" download>Word</a>
-          <a class="btn btn-ghost" href="downloads/淘天BP分析过程_工作簿_v2.xlsx" download>Excel</a>
+          <a class="btn btn-ghost" href="downloads/Taotian_BP_Report_v3.docx" download>Word</a>
+          <a class="btn btn-ghost" href="downloads/Taotian_BP_Workbook_v3.xlsx" download>Excel</a>
         </div>
       </article>
 
